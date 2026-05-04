@@ -1,0 +1,4 @@
+torch>=1.10.0
+numpy
+ortools>=9.0
+scikit-learn

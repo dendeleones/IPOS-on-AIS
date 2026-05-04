@@ -1,0 +1,207 @@
+[
+  {
+    "id": "Заказ_ERP_001",
+    "due_date": "2026-04-28T21:00:00",
+    "priority_weight": 0.89,
+    "operations": [
+      {
+        "id": "Заказ_ERP_001_оп1",
+        "item": "Деталь_1",
+        "op_number": 1,
+        "resource_id": "R2",
+        "norm_duration": 49.6,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_001_оп2",
+        "item": "Деталь_4",
+        "op_number": 2,
+        "resource_id": "R3",
+        "norm_duration": 66.1,
+        "predecessors": [
+          "Заказ_ERP_001_оп1"
+        ]
+      },
+      {
+        "id": "Заказ_ERP_001_оп3",
+        "item": "Деталь_1",
+        "op_number": 3,
+        "resource_id": "R3",
+        "norm_duration": 35.2,
+        "predecessors": [
+          "Заказ_ERP_001_оп2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Заказ_ERP_002",
+    "due_date": "2026-04-29T06:00:00",
+    "priority_weight": 0.82,
+    "operations": [
+      {
+        "id": "Заказ_ERP_002_оп1",
+        "item": "Деталь_2",
+        "op_number": 1,
+        "resource_id": "R3",
+        "norm_duration": 27.8,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_002_оп2",
+        "item": "Деталь_1",
+        "op_number": 2,
+        "resource_id": "R1",
+        "norm_duration": 96.2,
+        "predecessors": [
+          "Заказ_ERP_002_оп1"
+        ]
+      },
+      {
+        "id": "Заказ_ERP_002_оп3",
+        "item": "Деталь_2",
+        "op_number": 3,
+        "resource_id": "R1",
+        "norm_duration": 108.1,
+        "predecessors": [
+          "Заказ_ERP_002_оп2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Заказ_ERP_003",
+    "due_date": "2026-04-29T19:00:00",
+    "priority_weight": 0.99,
+    "operations": [
+      {
+        "id": "Заказ_ERP_003_оп1",
+        "item": "Деталь_3",
+        "op_number": 1,
+        "resource_id": "R3",
+        "norm_duration": 60.9,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_003_оп2",
+        "item": "Деталь_3",
+        "op_number": 2,
+        "resource_id": "R2",
+        "norm_duration": 25.2,
+        "predecessors": [
+          "Заказ_ERP_003_оп1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Заказ_ERP_004",
+    "due_date": "2026-04-30T11:00:00",
+    "priority_weight": 0.72,
+    "operations": [
+      {
+        "id": "Заказ_ERP_004_оп1",
+        "item": "Деталь_3",
+        "op_number": 1,
+        "resource_id": "R1",
+        "norm_duration": 118.2,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_004_оп2",
+        "item": "Деталь_2",
+        "op_number": 2,
+        "resource_id": "R1",
+        "norm_duration": 47.9,
+        "predecessors": [
+          "Заказ_ERP_004_оп1"
+        ]
+      },
+      {
+        "id": "Заказ_ERP_004_оп3",
+        "item": "Деталь_4",
+        "op_number": 3,
+        "resource_id": "R1",
+        "norm_duration": 20.8,
+        "predecessors": [
+          "Заказ_ERP_004_оп2"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Заказ_ERP_005",
+    "due_date": "2026-04-29T13:00:00",
+    "priority_weight": 1.96,
+    "operations": [
+      {
+        "id": "Заказ_ERP_005_оп1",
+        "item": "Деталь_3",
+        "op_number": 1,
+        "resource_id": "R3",
+        "norm_duration": 20.5,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_005_оп2",
+        "item": "Деталь_4",
+        "op_number": 2,
+        "resource_id": "R2",
+        "norm_duration": 22.4,
+        "predecessors": [
+          "Заказ_ERP_005_оп1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Заказ_ERP_006",
+    "due_date": "2026-04-29T08:00:00",
+    "priority_weight": 0.86,
+    "operations": [
+      {
+        "id": "Заказ_ERP_006_оп1",
+        "item": "Деталь_2",
+        "op_number": 1,
+        "resource_id": "R3",
+        "norm_duration": 27.0,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_006_оп2",
+        "item": "Деталь_3",
+        "op_number": 2,
+        "resource_id": "R2",
+        "norm_duration": 58.6,
+        "predecessors": [
+          "Заказ_ERP_006_оп1"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Заказ_ERP_007",
+    "due_date": "2026-04-29T22:00:00",
+    "priority_weight": 1.73,
+    "operations": [
+      {
+        "id": "Заказ_ERP_007_оп1",
+        "item": "Деталь_1",
+        "op_number": 1,
+        "resource_id": "R1",
+        "norm_duration": 46.1,
+        "predecessors": []
+      },
+      {
+        "id": "Заказ_ERP_007_оп2",
+        "item": "Деталь_1",
+        "op_number": 2,
+        "resource_id": "R1",
+        "norm_duration": 115.4,
+        "predecessors": [
+          "Заказ_ERP_007_оп1"
+        ]
+      }
+    ]
+  }
+]

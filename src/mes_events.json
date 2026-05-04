@@ -1,0 +1,98 @@
+[
+  {
+    "timestamp": "2026-04-27T08:10:00",
+    "resource_id": "R2",
+    "operation_id": "Заказ_ERP_001_оп1",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T08:59:36",
+    "resource_id": "R2",
+    "operation_id": "Заказ_ERP_001_оп1",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T09:12:36",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_001_оп2",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T10:18:42",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_001_оп2",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T10:23:42",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_001_оп3",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T10:58:54",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_001_оп3",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T11:11:54",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_002_оп1",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T11:39:42",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_002_оп1",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T11:50:42",
+    "resource_id": "R1",
+    "operation_id": "Заказ_ERP_002_оп2",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T13:26:54",
+    "resource_id": "R1",
+    "operation_id": "Заказ_ERP_002_оп2",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T13:38:54",
+    "resource_id": "R1",
+    "operation_id": "Заказ_ERP_002_оп3",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T15:27:00",
+    "resource_id": "R1",
+    "operation_id": "Заказ_ERP_002_оп3",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T15:34:00",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_003_оп1",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T16:34:54",
+    "resource_id": "R3",
+    "operation_id": "Заказ_ERP_003_оп1",
+    "event_type": "complete"
+  },
+  {
+    "timestamp": "2026-04-27T16:47:54",
+    "resource_id": "R2",
+    "operation_id": "Заказ_ERP_003_оп2",
+    "event_type": "start"
+  },
+  {
+    "timestamp": "2026-04-27T17:13:06",
+    "resource_id": "R2",
+    "operation_id": "Заказ_ERP_003_оп2",
+    "event_type": "complete"
+  }
+]
