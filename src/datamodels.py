@@ -18,6 +18,7 @@ class Operation:
     resource_id: str
     norm_duration: float        # минуты
     predecessors: List[str] = field(default_factory=list)
+    type_id: Optional[str] = None   # <-- добавлено
 
 @dataclass
 class Order:
