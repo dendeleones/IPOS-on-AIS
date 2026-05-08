@@ -7,7 +7,7 @@ from job_shop_env import JobShopEnv
 from sklearn.neural_network import MLPClassifier
 import pickle
 
-def generate_random_orders(n_orders=30, n_resources=3, seed=None):
+def generate_random_orders(n_orders=50, n_resources=10, seed=None):
     if seed is not None:
         random.seed(seed)
     resources = [Resource(id=f'R{i}', name=f'Станок {i}') for i in range(1, n_resources+1)]
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     print("Генерация данных...")
     X, y = generate_training_data(2000)
     print(f"Собрано {len(X)} примеров.")
-    model = MLPClassifier(hidden_layer_sizes=(256, 256), max_iter=25, verbose=True)
+    model = MLPClassifier(hidden_layer_sizes=(256, 256), max_iter=100, verbose=True)
     model.fit(X, y)
     with open("behavior_cloning.pkl", "wb") as f:
         pickle.dump(model, f)

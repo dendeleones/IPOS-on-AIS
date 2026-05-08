@@ -6,7 +6,7 @@ from optimizer_milp import build_milp_schedule
 from predictor import DurationPredictor
 from database import (get_fixed_operations, get_planned_operations,
                       add_proposed_change, get_proposed_changes, accept_change,
-                      apply_accepted_changes, log_execution, get_execution_data,
+                      apply_accepted_changes, log_operation_state, get_execution_data,
                       update_schedule)
 
 class HybridAPS:
@@ -74,14 +74,23 @@ class HybridAPS:
             self._operational_dispatch(event.resource_id)
 
     def _operational_dispatch(self, resource_id):
-        # Использует CR или RL агента (пока заглушка)
+        """Оперативная диспетчеризация: CR или RL (PPO/BC)"""
         ready = self._get_ready_ops(resource_id)
         if not ready:
             return
         if self.use_rl and self.rl_agent:
-            pass
+            # Собираем состояние среды и признаки операций (упрощённо)
+            from job_shop_env import JobShopEnv
+            env = JobShopEnv(self.orders, list(self.resources.values()))
+            env.reset()
+            # ... синхронизация состояния опущена для краткости ...
+            # Здесь нужно актуализировать среду по текущему состоянию, после чего вызвать
+            # agent.select_action(state, op_feat, mask)
+            # Пока заглушка
+            best_op = ready[0]
         else:
-            best = min(ready, key=lambda op: self._critical_ratio(op))
+            best_op = min(ready, key=lambda op: self._critical_ratio(op))
+        # Отправляем команду MES (заглушка)
 
     def _critical_ratio(self, op):
         order = self._get_order_by_op(op.id)

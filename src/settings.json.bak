@@ -1,0 +1,8 @@
+{
+  "bc_model_path": "behavior_cloning.pkl",
+  "dqn_episodes": 500,
+  "dqn_lr": 0.0003,
+  "erp_file": "erp_orders.json",
+  "mes_file": "mes_events.json",
+  "gantt_slot_minutes": 120
+}
