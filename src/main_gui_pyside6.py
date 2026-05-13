@@ -556,19 +556,6 @@ class APSApp(QMainWindow):
         except:
             pass
 
-    # def run_rl_plan(self):
-    #     if not self.core.rl_agent:
-    #         QMessageBox.critical(self, "Ошибка", "Сначала загрузите RL-модель во вкладке «Обучение».")
-    #         return
-    #     self.statusBar().showMessage("Построение плана с помощью RL...")
-    #     # Запускаем в отдельном потоке? Не обязательно, RL работает быстро.
-    #     self.core.plan_with_rl()
-    #     self.statusBar().showMessage("План построен", 5000)
-    #     if self.core.current_schedule:
-    #         self.day_combo.setCurrentText(self.core.selected_date.strftime("%Y-%m-%d"))
-    #         self.draw_milp_plan()
-    #     self.show_dashboard()
-
     def run_rl_plan(self):
         if self.core.rl_agent:
             self.core.plan_with_rl()
@@ -604,34 +591,6 @@ class APSApp(QMainWindow):
         QMessageBox.information(self, "Рекомендация RL",
                                 f"Модель: {model_name}\nПредлагается запустить: {chosen['op_id']}")
 
-    # def _build_state_for_agent(self, env, ready_ops):
-    #     state = env._get_state()
-    #     busy = np.array([1.0 if env.resource_remaining[rid] > 0 else 0.0 for rid in env.resource_ids])
-    #     ext_state = np.concatenate([state, busy])
-    #     op_feat = np.zeros((env.max_actions, 5))
-    #     mask = np.zeros(env.max_actions, dtype=bool)
-    #     for i, op_info in enumerate(ready_ops):
-    #         if i >= env.max_actions:
-    #             break
-    #         op_id = op_info['op_id']
-    #         rid = op_info['resource_id']
-    #         due_min = 0; rem_time = 0; weight = 0; progress = 0
-    #         for order in env.orders:
-    #             for op in order.ops:
-    #                 if op.id == op_id:
-    #                     due_min = (order.due_date - env.start_datetime).total_seconds() / 60.0
-    #                     rem_time = env.op_remaining[op.id]
-    #                     weight = order.priority_weight
-    #                     completed = sum(1 for o in order.ops if env.op_status[o.id] == 'completed')
-    #                     progress = completed / len(order.ops)
-    #                     break
-    #         slack = (due_min - env.current_time) / 1440.0
-    #         rem_time_norm = rem_time / 1440.0
-    #         weight_norm = weight / 10.0
-    #         res_free = 0.0 if env.resource_remaining[rid] > 0 else 1.0
-    #         op_feat[i] = [slack, rem_time_norm, weight_norm, progress, res_free]
-    #         mask[i] = True
-    #     return ext_state, op_feat, mask
 
     # ---------- ЗАКАЗЫ ----------
     def create_orders_tab(self):
