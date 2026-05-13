@@ -1,4 +1,9 @@
-torch>=1.10.0
+PySide6
 numpy
-ortools>=9.0
+torch>=1.10.0
 scikit-learn
+python-dateutil
+ortools>=9.0
+sqlite3
+pandas
+matplotlib

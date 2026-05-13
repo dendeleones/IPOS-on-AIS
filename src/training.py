@@ -156,6 +156,20 @@ class TrainingSignals(QObject):
     progress = Signal(int, float)
     log = Signal(str)
 
+class SimpleDispatcher(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.BatchNorm1d(64),
+            nn.Linear(64, 32),
+            nn.ReLU(),
+            nn.BatchNorm1d(32),
+            nn.Linear(32, output_dim)
+        )
+    def forward(self, x):
+        return self.net(x)
 
 class Trainer:
     def __init__(self, signals=None):
@@ -191,35 +205,39 @@ class Trainer:
 
     def train_bc(self, epochs=50, batch_size=32, lr=1e-3, load_path=None, force_regen_data=False):
         self.stop_event.clear()
-        if self.signals:
-            self.signals.log.emit("Загрузка/генерация данных MILP...")
-        res_feat, op_feat, target = generate_milp_dataset(
-            200, R=5, O=20,
-            save_path="milp_dataset.npz",
-            force_regen=force_regen_data
-        )
-        if self.signals:
-            self.signals.log.emit(f"Собрано {len(res_feat)} примеров.")
 
-        dataset = TensorDataset(
-            torch.FloatTensor(res_feat), torch.FloatTensor(op_feat), torch.LongTensor(target)
-        )
-        train_size = int(0.8 * len(res_feat))
-        val_size = len(res_feat) - train_size
+        # Загружаем новый правильный датасет
+        if os.path.exists("gpss_dataset.npz"):
+            data = np.load("gpss_dataset.npz")
+            X = data['X']  # массив (samples, features)
+            y = data['y']  # массив (samples,) – номера ресурсов
+            if self.signals:
+                self.signals.log.emit(
+                    f"Загружен датасет GPSS: {X.shape[0]} примеров, признаков: {X.shape[1]}, классов: {np.max(y) + 1}")
+        else:
+            if self.signals:
+                self.signals.log.emit("Файл gpss_dataset.npz не найден. Сгенерируйте его с помощью gpss_simulator.py")
+            return None
+
+        # Преобразуем в тензоры
+        dataset = TensorDataset(torch.FloatTensor(X), torch.LongTensor(y))
+        train_size = int(0.8 * len(X))
+        val_size = len(X) - train_size
         train_set, val_set = random_split(dataset, [train_size, val_size])
         train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=False)
+        val_loader = DataLoader(val_set, batch_size=batch_size)
 
-        d_res = res_feat.shape[2]
-        d_op = op_feat.shape[2]
-        self.model = ResourceOpPointerNet(d_res=d_res, d_op=d_op)
+        input_dim = X.shape[1]
+        output_dim = len(np.unique(y))
+
+        # Используем простой MLP (уже есть в файле), а не PointerNet, чтобы быстро получить результат
+        self.model = SimpleDispatcher(input_dim, output_dim).to(torch.device("cpu"))
 
         if load_path:
             self.load(load_path)
 
         optimizer = optim.Adam(self.model.parameters(), lr=lr)
         criterion = nn.CrossEntropyLoss()
-
         best_val_acc = 0.0
         best_model_state = None
 
@@ -231,26 +249,24 @@ class Trainer:
 
             self.model.train()
             train_loss = 0
-            for res, ops, tgt in train_loader:
-                if self.stop_event.is_set():
-                    break
+            for batch_x, batch_y in train_loader:
                 optimizer.zero_grad()
-                probs = self.model(res, ops)
-                loss = criterion(probs.view(-1, probs.size(-1)), tgt.view(-1))
+                out = self.model(batch_x)
+                loss = criterion(out, batch_y)
                 loss.backward()
                 optimizer.step()
                 train_loss += loss.item()
-            avg_train_loss = train_loss / len(train_loader) if train_loss > 0 else 0
+            avg_train_loss = train_loss / len(train_loader)
 
             self.model.eval()
             correct = 0
             total = 0
             with torch.no_grad():
-                for res, ops, tgt in val_loader:
-                    probs = self.model(res, ops)
-                    pred = probs.argmax(dim=2)
-                    correct += (pred == tgt).sum().item()
-                    total += tgt.numel()
+                for batch_x, batch_y in val_loader:
+                    out = self.model(batch_x)
+                    pred = out.argmax(dim=1)
+                    correct += (pred == batch_y).sum().item()
+                    total += batch_y.size(0)
             val_acc = correct / total if total > 0 else 0
 
             if val_acc > best_val_acc:

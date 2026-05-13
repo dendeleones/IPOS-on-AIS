@@ -195,6 +195,13 @@ def init_db():
         )
     """)
 
+    # столбец status у заказов
+    cur.execute("PRAGMA table_info(orders)")
+    cols = [c[1] for c in cur.fetchall()]
+    if 'status' not in cols:
+        cur.execute("ALTER TABLE orders ADD COLUMN status TEXT DEFAULT 'active'")
+        cur.execute("UPDATE orders SET status='active' WHERE status IS NULL")
+
     conn.commit()
     conn.close()
 
@@ -203,7 +210,7 @@ def save_orders_to_db(orders):
     conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
     for order in orders:
-        cur.execute("INSERT OR REPLACE INTO orders (id, due_date, priority_weight, name) VALUES (?, ?, ?, ?)",
+        cur.execute("INSERT OR REPLACE INTO orders (id, due_date, priority_weight, name, status) VALUES (?, ?, ?, ?, 'active')",
                     (order.id, order.due_date.isoformat(), order.priority_weight, order.name))
         for op in order.ops:
             preds = ",".join(op.predecessors) if op.predecessors else ""
@@ -227,7 +234,8 @@ def load_orders_from_db(resources=None):
     has_quantity = 'quantity' in cols
     has_urgency = 'urgency' in cols
     has_slack = 'slack_hours' in cols
-    cur.execute("SELECT * FROM orders")
+    # Загружаем только активные заказы
+    cur.execute("SELECT * FROM orders WHERE status='active'")
     orders = []
     for row in cur:
         order = Order(id=row[0], due_date=datetime.fromisoformat(row[1]), priority_weight=row[2])
@@ -278,6 +286,13 @@ def delete_operation_from_db(op_id):
     conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
     cur.execute("DELETE FROM operations WHERE id=?", (op_id,))
+    conn.commit()
+    conn.close()
+
+def set_order_status(order_id, status):
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+    cur.execute("UPDATE orders SET status=? WHERE id=?", (status, order_id))
     conn.commit()
     conn.close()
 
@@ -423,10 +438,36 @@ def update_task_status(operation_id, new_status):
     conn.commit()
     conn.close()
 
+def get_completed_tasks():
+    """Возвращает список завершённых задач."""
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+    # Получаем информацию о завершённых задачах из лога и расписания
+    cur.execute("""
+        SELECT 
+            o.operation_id, op.order_id, op.item, o.resource_id, r.name as resource_name
+        FROM operation_state_log o
+        JOIN operations op ON o.operation_id = op.id
+        JOIN resources r ON o.resource_id = r.id
+        WHERE o.status = 'completed'
+    """)
+    tasks = []
+    for row in cur:
+        tasks.append({
+            'operation_id': row[0],
+            'order_id': row[1],
+            'item': row[2],
+            'resource_id': row[3],
+            'resource_name': row[4]
+        })
+    conn.close()
+    return tasks
+
 def get_tasks_for_resource(resource_id):
     conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
-    cur.execute("SELECT operation_id, position, status FROM task_queue WHERE resource_id=? ORDER BY position", (resource_id,))
+    # Возвращаем только задачи в статусе 'pending' и 'active'
+    cur.execute("SELECT operation_id, position, status FROM task_queue WHERE resource_id=? AND status IN ('pending', 'active') ORDER BY position", (resource_id,))
     tasks = [{'operation_id': row[0], 'position': row[1], 'status': row[2]} for row in cur.fetchall()]
     conn.close()
     return tasks

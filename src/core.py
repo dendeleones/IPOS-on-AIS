@@ -17,9 +17,11 @@ from database import (
     add_task_to_queue, update_task_status, get_tasks_for_resource, delete_task_from_queue,
     delete_order_from_db, delete_operation_from_db,
     get_setting, set_setting, get_all_settings,
-    log_resource_state, log_operation_state, get_execution_data
+    log_resource_state, log_operation_state, get_execution_data, set_order_status
 )
 from PySide6.QtCore import QObject, Signal
+from training import ResourceOpPointerNet
+import torch
 
 class BCAgent:
     def __init__(self, model_path):
@@ -29,6 +31,33 @@ class BCAgent:
         probs = self.model.predict_proba([state])[0]
         probs[~np.array(mask)] = -1
         return np.argmax(probs)
+
+class PointerNetAgent:
+    def __init__(self, model_path):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # Размерности, использованные при обучении
+        self.d_res = 7
+        self.d_op = 6
+        self.model = ResourceOpPointerNet(d_res=self.d_res, d_op=self.d_op).to(self.device)
+        self.model.load_state_dict(torch.load(model_path, map_location=self.device))
+        self.model.eval()
+
+    def select_action(self, res_feat, op_feat, mask):
+        """
+        res_feat: (R, d_res)
+        op_feat:  (O, d_op)
+        mask:     (O, R) bool
+        Возвращает индекс выбранной операции (0..O-1).
+        """
+        with torch.no_grad():
+            r = torch.tensor(res_feat, dtype=torch.float32).unsqueeze(0).to(self.device)
+            o = torch.tensor(op_feat, dtype=torch.float32).unsqueeze(0).to(self.device)
+            m = torch.tensor(mask, dtype=torch.bool).unsqueeze(0).to(self.device)
+            probs = self.model(r, o, m)          # (1, O, R)
+            # Выбираем операцию с наибольшей вероятностью хотя бы на одном ресурсе
+            values, _ = probs.max(dim=-1)       # (1, O)
+            action = values.argmax(dim=-1).item()
+            return action, None
 
 class APSCore(QObject):
     dashboard_changed = Signal()
@@ -66,9 +95,35 @@ class APSCore(QObject):
             for k, v in self.settings.items():
                 set_setting(k, v)
 
+        # Попытка загрузить RL-модель, если путь сохранён в настройках
+        self.load_rl_model_if_available()
+
         saved_orders = load_orders_from_db(self.resources)
         if saved_orders:
             self.orders = saved_orders
+            # Приведение к "1 заказ – 1 операция" для уже существующих в БД записей
+            for order in self.orders:
+                if len(order.ops) > 1:
+                    # Удаляем лишние операции из БД
+                    for op in order.ops[1:]:
+                        delete_operation_from_db(op.id)
+                    order.ops = order.ops[:1]
+                    # Пересохраняем заказ с одной операцией
+                    save_orders_to_db([order])
+            # Удаляем из очереди все операции, которых нет среди активных заказов
+            valid_op_ids = set()
+            for order in self.orders:
+                for op in order.ops:
+                    valid_op_ids.add(op.id)
+            import sqlite3
+            conn = sqlite3.connect("aps.db")
+            cur = conn.cursor()
+            cur.execute("SELECT DISTINCT operation_id FROM task_queue")
+            for row in cur.fetchall():
+                if row[0] not in valid_op_ids:
+                    cur.execute("DELETE FROM task_queue WHERE operation_id=?", (row[0],))
+            conn.commit()
+            conn.close()
             self.aps_engine.load_orders(self.orders)
         self.load_schedules_from_db()
         if not self.current_schedule and not self.approved_schedule and self.orders:
@@ -84,6 +139,58 @@ class APSCore(QObject):
         for k, v in settings_dict.items():
             set_setting(k, str(v))
         self.settings = get_all_settings()
+
+    def _build_pointer_input(self, env, ready_ops):
+        type_map = get_operation_types()  # id → имя
+        type_list = ['фрезеровка', 'сборка', 'сварка']  # порядок, использованный в датасете
+        type_to_idx = {name: i for i, name in enumerate(type_list)}
+        res_types = get_resource_operation_types()  # rid → [type_id]
+
+        R = len(env.resource_ids)
+        d_res = 7
+        res_feat = np.zeros((R, d_res), dtype=np.float32)
+        for i, rid in enumerate(env.resource_ids):
+            res = self.resource_map[rid]
+            status_active = 1.0 if res.status == 'Работает' else 0.0
+            load_norm = res.load_minutes / 240.0
+            work_hours = float(res.work_hours)
+            type_onehot = np.zeros(3)
+            for tid in res_types.get(rid, []):
+                tname = type_map.get(tid, '')
+                if tname in type_to_idx:
+                    type_onehot[type_to_idx[tname]] = 1.0
+            repair = float(res.repair)
+            res_feat[i, 0] = status_active
+            res_feat[i, 1] = load_norm
+            res_feat[i, 2] = work_hours
+            res_feat[i, 3:6] = type_onehot
+            res_feat[i, 6] = repair
+
+        O = len(ready_ops)
+        d_op = 6
+        op_feat = np.zeros((O, d_op), dtype=np.float32)
+        mask = np.zeros((O, R), dtype=bool)
+        for idx, op_info in enumerate(ready_ops):
+            op_id = op_info['op_id']
+            op = self._get_operation_by_id(op_id)
+            type_onehot = np.zeros(3)
+            if op and op.type_id:
+                tname = type_map.get(op.type_id, '')
+                if tname in type_to_idx:
+                    type_onehot[type_to_idx[tname]] = 1.0
+            op_feat[idx, :3] = type_onehot
+            op_feat[idx, 3] = op.norm_duration / 120.0 if op else 0.5
+            op_feat[idx, 4] = op.urgency if op else 1.0
+            op_feat[idx, 5] = (op.slack_hours if op else 0) / 48.0
+
+            # Допустимый ресурс из ready_ops
+            allowed_rid = op_info['resource_id']
+            if allowed_rid in env.resource_ids:
+                mask[idx, env.resource_ids.index(allowed_rid)] = True
+            else:
+                mask[idx, :] = True
+
+        return res_feat, op_feat, mask
 
     def load_schedules_from_db(self):
         fixed = get_fixed_operations()
@@ -161,20 +268,16 @@ class APSCore(QObject):
                 round(np.random.uniform(0.5, 2.0), 2),
                 name="Случайный"
             )
-            prev = None
-            for j in range(1, np.random.randint(2, 4) + 1):
-                op_id = f"{order.id}_оп{j}"
-                type_id = np.random.choice(types)
-                op = Operation(
-                    op_id, order.id, f"Деталь_{np.random.randint(1, 5)}", j,
-                    round(np.random.uniform(20, 120), 1)
-                )
-                op.type_id = type_id
-                op.quantity = np.random.randint(1, 10)
-                if prev:
-                    op.predecessors = [prev]
-                order.ops.append(op)
-                prev = op_id
+            # Единственная операция
+            op_id = f"{order.id}_оп1"
+            type_id = np.random.choice(types)
+            op = Operation(
+                op_id, order.id, f"Деталь_{np.random.randint(1, 5)}", 1,
+                round(np.random.uniform(20, 120), 1)
+            )
+            op.type_id = type_id
+            op.quantity = np.random.randint(1, 10)
+            order.ops.append(op)
             generated.append(order)
 
         self.orders.extend(generated)
@@ -192,11 +295,12 @@ class APSCore(QObject):
             erp_data = json.load(f)
         loaded = []
         for od in erp_data:
-            order = Order(od['id'], datetime.fromisoformat(od['due_date']), od.get('priority_weight', 1.0), name=od.get('name', ''))
-            for op_d in od['operations']:
-                op = Operation(op_d['id'], order.id, op_d['item'], op_d['op_number'],
-                               op_d['norm_duration'])
-                op.predecessors = op_d.get('predecessors', [])
+            order = Order(...)
+            # Берём только первую операцию
+            op_d = od['operations'][0] if od.get('operations') else {}
+            if op_d:
+                op = Operation(op_d['id'], order.id, op_d['item'], 1, op_d['norm_duration'])
+                op.predecessors = []  # больше нет зависимостей
                 op.type_id = op_d.get('type_id', '')
                 op.quantity = op_d.get('quantity', 1)
                 order.ops.append(op)
@@ -209,18 +313,98 @@ class APSCore(QObject):
         self.orders_changed.emit()
         self.dashboard_changed.emit()
 
+    def _build_heuristic_schedule(self, only_unscheduled=True):
+        """
+        Быстрый эвристический планировщик: EDD + Least Workload.
+        Возвращает словарь current_schedule.
+        """
+        from datetime import datetime
+        work_until = {r.id: datetime.now() for r in self.resources}
+        schedule = {}
+        ops = []
+        for order in self.orders:
+            for op in order.ops:
+                if only_unscheduled and (op.id in self.current_schedule or op.id in self.approved_schedule):
+                    continue
+                ops.append((order, op))
+
+        # Сортируем по дате сдачи (Earliest Due Date)
+        ops.sort(key=lambda x: x[0].due_date)
+
+        # Если у ресурса не указаны типы, он универсален
+        if not hasattr(self, 'cached_res_op_types'):
+            self.cached_res_op_types = get_resource_operation_types()
+
+        for order, op in ops:
+            # Допустимые ресурсы: если у операции есть тип, берём те, что с ним связаны
+            if op.type_id:
+                allowed_rids = self.cached_res_op_types.get(op.type_id, [])
+            else:
+                allowed_rids = list(self.resource_map.keys())
+            if not allowed_rids:
+                allowed_rids = list(self.resource_map.keys())
+
+            # Выбираем ресурс, который освободится раньше всех (Least Workload)
+            best_rid = min(allowed_rids, key=lambda rid: work_until.get(rid, datetime.max))
+            start = max(work_until[best_rid], datetime.now())
+            dur = timedelta(minutes=op.norm_duration)
+            end = start + dur
+            schedule[op.id] = {'resource_id': best_rid, 'start': start, 'end': end}
+            work_until[best_rid] = end
+
+        return schedule
+
+    def _try_start_next_on_resource(self, resource_id):
+        """Запускает первую pending-задачу на ресурсе, если он свободен."""
+        tasks = get_tasks_for_resource(resource_id)
+        # Если уже есть активная задача – ничего не делаем
+        if any(t['status'] == 'active' for t in tasks):
+            return
+        # Ищем первую ожидающую
+        pending = [t for t in tasks if t['status'] == 'pending']
+        if pending:
+            self.move_task_to_production(pending[0]['operation_id'], resource_id)
+
     def run_milp(self):
+        """Быстрое эвристическое планирование (замена точного MILP)."""
         if not self.orders:
             return
-        if not any(order.ops for order in self.orders):
-            return
-        self.aps_engine.run_milp()
-        self.current_schedule = self.aps_engine.current_schedule
-        if self.current_schedule:
-            min_start = min(info['start'] for info in self.current_schedule.values())
-            self.selected_date = min_start.replace(hour=0, minute=0, second=0, microsecond=0)
-            self._sync_schedule_to_task_queue()
+        self.current_schedule = self._build_heuristic_schedule(only_unscheduled=True)
+        self._sync_schedule_to_task_queue()
         self.dashboard_changed.emit()
+        self.message_signal.emit("info", "Эвристический план построен.")
+
+    def _build_state_for_agent(self, env, ready_ops):
+        state = env._get_state()
+        busy = np.array([1.0 if env.resource_remaining[rid] > 0 else 0.0 for rid in env.resource_ids])
+        ext_state = np.concatenate([state, busy])
+        op_feat = np.zeros((env.max_actions, 5))
+        mask = np.zeros(env.max_actions, dtype=bool)
+        for i, op_info in enumerate(ready_ops):
+            if i >= env.max_actions:
+                break
+            op_id = op_info['op_id']
+            rid = op_info['resource_id']
+            due_min = 0;
+            rem_time = 0;
+            weight = 0;
+            progress = 0
+            for order in env.orders:
+                for op in order.ops:
+                    if op.id == op_id:
+                        due_min = (order.due_date - env.start_datetime).total_seconds() / 60.0
+                        rem_time = env.op_remaining[op.id]
+                        weight = order.priority_weight
+                        completed = sum(1 for o in order.ops if env.op_status[o.id] == 'completed')
+                        progress = completed / len(order.ops)
+                        break
+            slack = (due_min - env.current_time) / 1440.0
+            rem_time_norm = rem_time / 1440.0
+            weight_norm = weight / 10.0
+            res_free = 0.0 if env.resource_remaining[rid] > 0 else 1.0
+            op_feat[i] = [slack, rem_time_norm, weight_norm, progress, res_free]
+            mask[i] = True
+        return ext_state, op_feat, mask
 
     def _sync_schedule_to_task_queue(self):
         for op_id, info in self.current_schedule.items():
@@ -254,64 +438,138 @@ class APSCore(QObject):
         self.message_signal.emit("info", "План утверждён.")
 
     def move_task_to_queue(self, op_id, resource_id):
-        # Удаляем операцию из старых планов и очередей
+        # Удаляем операцию из всех планов и других очередей
         self._remove_from_schedules(op_id)
         delete_task_from_queue(op_id)
+        # Добавляем в очередь выбранного ресурса
         add_task_to_queue(resource_id, op_id)
         log_operation_state(op_id, 'pending', resource_id)
-        tasks = get_tasks_for_resource(resource_id)
-        if not any(t['status'] == 'active' for t in tasks):
-            pending = [t for t in tasks if t['status'] == 'pending']
-            if pending:
-                self.move_task_to_production(pending[0]['operation_id'], resource_id)
-                return
+        # Пытаемся сразу запустить, если ресурс свободен
+        self._try_start_next_on_resource(resource_id)
+        # Обновляем интерфейс
         self.dashboard_changed.emit()
         self.message_signal.emit("info", f"Заказ {op_id} помещён в очередь {resource_id}")
 
     def move_task_to_production(self, op_id, resource_id):
-        tasks = get_tasks_for_resource(resource_id)
-        for t in tasks:
-            if t['status'] == 'active':
-                update_task_status(t['operation_id'], 'completed')
-                log_operation_state(t['operation_id'], 'completed')
+        # Делаем операцию активной на указанном ресурсе
         update_task_status(op_id, 'active')
         log_operation_state(op_id, 'active', resource_id)
+        # Оповещаем GUI
         self.dashboard_changed.emit()
         self.message_signal.emit("info", f"Заказ {op_id} запущен в производство на {resource_id}")
 
     def complete_task(self, op_id):
-        update_task_status(op_id, 'completed')
-        log_operation_state(op_id, 'completed')
+        # Ищем ресурс, на котором операция сейчас (active/pending)
+        found_resource = None
         for res in self.resources:
             tasks = get_tasks_for_resource(res.id)
-            for t in tasks:
-                if t['operation_id'] == op_id:
-                    pending = [t for t in tasks if t['status'] == 'pending']
-                    if pending:
-                        next_op = pending[0]['operation_id']
-                        self.move_task_to_production(next_op, res.id)
-                    else:
-                        self.dashboard_changed.emit()
-                    return
-        self.dashboard_changed.emit()
+            if any(t['operation_id'] == op_id for t in tasks):
+                found_resource = res.id
+                break
 
-    def get_completed_tasks(self):
-        completed = []
-        for r in self.resources:
-            tasks = get_tasks_for_resource(r.id)
-            for t in tasks:
-                if t['status'] == 'completed':
-                    op = self._get_operation_by_id(t['operation_id'])
-                    if op:
-                        order = self._get_order_by_op(t['operation_id'])
-                        completed.append({
-                            'operation_id': t['operation_id'],
-                            'order_id': order.id if order else '',
-                            'item': op.item,
-                            'resource_id': r.id,
-                            'resource_name': r.name
-                        })
-        return completed
+        if not found_resource:
+            self.dashboard_changed.emit()
+            return
+
+        # Завершаем операцию
+        update_task_status(op_id, 'completed')
+        log_operation_state(op_id, 'completed', resource_id=found_resource)
+        self._remove_from_schedules(op_id)
+        delete_task_from_queue(op_id)
+
+        # Находим заказ (теперь операция одна на заказ)
+        order = self._get_order_by_op(op_id)
+        if order:
+            # Помечаем заказ завершённым в БД
+            set_order_status(order.id, 'completed')
+            # Убираем из активного списка (чтобы не отображался в backlog и на дашборде)
+            self.orders = [o for o in self.orders if o.id != order.id]
+            # Оповещаем GUI
+            self.orders_changed.emit()
+            self.dashboard_changed.emit()
+        else:
+            self.dashboard_changed.emit()
+            return
+
+        # Пробуем запустить следующую ожидающую задачу на освободившемся ресурсе
+        self._try_start_next_on_resource(found_resource)
+
+    def plan_with_rl(self):
+        if not self.rl_agent:
+            self.message_signal.emit("error", "Модель не загружена. Обучите PointerNet или загрузите веса.")
+            return
+
+        # Собираем все операции, которые ещё не в approved_schedule (и не завершены)
+        all_ops = []
+        for order in self.orders:
+            for op in order.ops:
+                if op.id not in self.approved_schedule:
+                    all_ops.append((order, op))
+
+        if not all_ops:
+            return
+
+        # Строим признаки ресурсов и операций, как в обучении
+        type_map = get_operation_types()
+        res_types = get_resource_operation_types()
+        # возможно, у вас тип операции не задан — тогда пропускаем one-hot
+        type_list = ['фрезеровка', 'сборка', 'сварка']
+        type_to_idx = {name: i for i, name in enumerate(type_list)}
+
+        R = len(self.resources)
+        res_feat = np.zeros((R, 7), dtype=np.float32)
+        for i, res in enumerate(self.resources):
+            res_feat[i, 0] = 1.0 if res.status == 'Работает' else 0.0
+            res_feat[i, 1] = res.load_minutes / 240.0
+            res_feat[i, 2] = 24.0  # work_hours (или реальное)
+            # one-hot типов
+            type_onehot = np.zeros(3)
+            for tid in res_types.get(res.id, []):
+                tname = type_map.get(tid, '')
+                if tname in type_to_idx:
+                    type_onehot[type_to_idx[tname]] = 1.0
+            res_feat[i, 3:6] = type_onehot
+            res_feat[i, 6] = float(res.repair)
+
+        O = len(all_ops)
+        op_feat = np.zeros((O, 6), dtype=np.float32)
+        for idx, (order, op) in enumerate(all_ops):
+            type_onehot = np.zeros(3)
+            if op.type_id:
+                tname = type_map.get(op.type_id, '')
+                if tname in type_to_idx:
+                    type_onehot[type_to_idx[tname]] = 1.0
+            op_feat[idx, :3] = type_onehot
+            op_feat[idx, 3] = op.norm_duration / 120.0
+            op_feat[idx, 4] = op.urgency if hasattr(op, 'urgency') else 1.0
+            op_feat[idx, 5] = (op.slack_hours if hasattr(op, 'slack_hours') else 0) / 48.0
+
+        # Получаем предсказания модели — для каждой операции выбираем ресурс с max вероятностью
+        with torch.no_grad():
+            r_t = torch.tensor(res_feat).unsqueeze(0).to(self.rl_agent.device)
+            o_t = torch.tensor(op_feat).unsqueeze(0).to(self.rl_agent.device)
+            # маска не нужна, модель сама вернёт вероятности по всем ресурсам
+            probs = self.rl_agent.model(r_t, o_t).squeeze(0)  # (O, R)
+            chosen_res_indices = probs.argmax(dim=1).cpu().numpy()
+
+        # Назначаем операции
+        current_time = self.selected_date  # или datetime.now()
+        self.current_schedule = {}
+        for idx, (order, op) in enumerate(all_ops):
+            rid = self.resources[chosen_res_indices[idx]].id
+            duration = timedelta(minutes=op.norm_duration)
+            start = current_time
+            end = start + duration
+            self.current_schedule[op.id] = {
+                'resource_id': rid,
+                'start': start,
+                'end': end
+            }
+            # Для простоты не моделируем очередь, но можно добавить сдвиг по времени
+
+        self._sync_schedule_to_task_queue()
+        self.dashboard_changed.emit()
+        self.message_signal.emit("info", "Мгновенный план построен (PointerNet).")
 
     def add_resource(self, rid, name):
         if rid in self.resource_map:
@@ -397,3 +655,20 @@ class APSCore(QObject):
                 if op.id == op_id:
                     return order
         return None
+
+    def load_rl_model_if_available(self):
+        path = self.settings.get('model_path')
+        if not path or not os.path.exists(path):
+            return False
+        try:
+            if path.endswith('.pkl'):
+                self.rl_agent = BCAgent(path)
+            elif path.endswith('.pth'):
+                self.rl_agent = PointerNetAgent(path)
+            else:
+                return False
+            self.loaded_model_name = os.path.splitext(os.path.basename(path))[0]
+            return True
+        except Exception as e:
+            self.message_signal.emit("error", f"Ошибка загрузки модели: {e}")
+            return False

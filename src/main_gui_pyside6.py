@@ -10,7 +10,8 @@ from PySide6.QtWidgets import (
     QPushButton, QLabel, QComboBox, QTabWidget, QTableWidget, QTableWidgetItem,
     QHeaderView, QMessageBox, QLineEdit, QFormLayout, QGroupBox, QRadioButton,
     QScrollArea, QFrame, QGridLayout, QSizePolicy, QStyleFactory,
-    QDoubleSpinBox, QSpinBox, QCheckBox, QTextEdit, QGraphicsView, QGraphicsScene
+    QDoubleSpinBox, QSpinBox, QCheckBox, QTextEdit, QGraphicsView, QGraphicsScene,
+    QDialog,  QDialogButtonBox
 )
 from PySide6.QtCore import Qt, Signal, QThread, QMimeData, QPoint
 from PySide6.QtGui import QFont, QColor, QDrag, QPixmap, QPainter, QPen, QBrush, QIcon
@@ -20,10 +21,10 @@ from PySide6.QtWidgets import QFileDialog   # если ещё нет
 from training import TrainingSignals, Trainer
 from train_slim import SelfLabelingTrainer
 
-from core import APSCore
+from core import APSCore, PointerNetAgent
 from database import (
     get_operation_types, get_state_types, get_tasks_for_resource,
-    delete_task_from_queue, get_resource_operation_types, get_operation_types
+    delete_task_from_queue, get_resource_operation_types, get_operation_types, get_completed_tasks
 )
 
 STYLE_SHEET = """
@@ -161,6 +162,13 @@ class TaskCard(QFrame):
         layout.addWidget(label)
         self.setCursor(Qt.OpenHandCursor)
 
+
+        def mouseDoubleClickEvent(self, event):
+            main_win = self.window()
+            if main_win and hasattr(main_win, 'open_order_editor'):
+                main_win.open_order_editor(self.op_id)
+            super().mouseDoubleClickEvent(event)
+
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.drag_start_pos = event.position().toPoint()
@@ -247,6 +255,8 @@ class APSApp(QMainWindow):
         self.core.dashboard_changed.connect(self.refresh_dashboard)
         self.core.orders_changed.connect(self.refresh_order_table)
         self.core.message_signal.connect(self.show_message)
+        self.core.dashboard_changed.connect(self.refresh_completed_table)
+
 
         # Восстановление последней модели
         last_model = get_last_model_name()
@@ -277,6 +287,8 @@ class APSApp(QMainWindow):
         self.tabs.addTab(self.create_train_tab(), "Обучение")
         self.tabs.addTab(self.create_settings_tab(), "Настройки")
         self.tabs.addTab(self.create_completed_tab(), "Завершённые")
+
+
 
     # ---------- ДАШБОРД ----------
     def create_dashboard_tab(self):
@@ -357,11 +369,17 @@ class APSApp(QMainWindow):
             lbl.setStyleSheet("font-size: 14px; font-weight: bold; color: #89b4fa; background: transparent; padding: 4px;")
             self.grid_layout.addWidget(lbl, 0, col)
 
+        # Получаем ID операций, которые находятся в очереди или в производстве
         scheduled_ids = set()
         for r in self.core.resources:
             tasks = get_tasks_for_resource(r.id)
             for t in tasks:
                 scheduled_ids.add(t['operation_id'])
+
+        # Также добавляем ID операций, которые запланированы (в scheduled), но не назначены на ресурс
+        for op_id, info in self.core.current_schedule.items():
+            if info['resource_id'] not in self.core.resource_map:
+                scheduled_ids.add(op_id)
 
         type_map = get_operation_types()
 
@@ -389,18 +407,53 @@ class APSApp(QMainWindow):
                 self.grid_layout.addWidget(line, grid_row - 1, 0, 1, 3)
 
             # Рабочий центр
-            rc_card = QFrame()
-            rc_card.setStyleSheet("background-color: #ffffff; border: 1px solid #45475a; border-radius: 6px;")
-            rc_card.setFixedSize(220, 80)
-            rc_layout = QVBoxLayout(rc_card)
-            rc_label = QLabel(f"{res.name}\n{res.status}")
-            rc_label.setStyleSheet("color: black; font-weight: bold; font-size: 12px;")
-            rc_layout.addWidget(rc_label)
-            self.grid_layout.addWidget(rc_card, grid_row, 0, alignment=Qt.AlignTop)
+            # rc_card = QFrame()
+            # rc_card.setStyleSheet("background-color: #ffffff; border: 1px solid #45475a; border-radius: 6px;")
+            # rc_card.setFixedSize(220, 80)
+            # rc_layout = QVBoxLayout(rc_card)
+            # rc_label = QLabel(f"{res.name}\n{res.status}")
+            # rc_label.setStyleSheet("color: black; font-weight: bold; font-size: 12px;")
+            # rc_layout.addWidget(rc_label)
 
             tasks = get_tasks_for_resource(res.id)
             active_task = next((t for t in tasks if t['status'] == 'active'), None)
             pending_tasks = [t for t in tasks if t['status'] == 'pending']
+
+            # Вместо отдельной кнопки – контейнер с обработкой клика
+            # Строим кликабельную карточку ресурса с индикаторами
+            rc_container = QFrame()
+            rc_container.setStyleSheet(
+                "QFrame { background-color: #ffffff; border: 1px solid #45475a; border-radius: 6px; }"
+                "QFrame:hover { background-color: #f0f0f0; }"
+            )
+            rc_container.setFixedSize(220, 120)
+            # Двойной клик по карточке открывает информацию о ресурсе
+            rc_container.mouseDoubleClickEvent = lambda event, r=res: self.open_resource_info(r)
+
+            rc_layout = QVBoxLayout(rc_container)
+            rc_layout.setContentsMargins(8, 8, 8, 8)
+
+            # Название и статус
+            rc_name = QLabel(f"<b>{res.name}</b><br>{res.status}")
+            rc_name.setStyleSheet("color: black; font-size: 12px;")
+            rc_layout.addWidget(rc_name)
+
+            # Индикаторы
+            pending_count = len(pending_tasks) if pending_tasks else 0
+            has_active = active_task is not None
+            reliability = getattr(res, 'reliability', 1.0)
+
+            indic = QLabel(
+                f"Готовность: {reliability:.2f}\n"
+                f"В очереди: {pending_count}\n"
+                f"Активен: {'да' if has_active else 'нет'}"
+            )
+            indic.setStyleSheet("color: black; font-size: 10px;")
+            rc_layout.addWidget(indic)
+
+            self.grid_layout.addWidget(rc_container, grid_row, 0, alignment=Qt.AlignTop)
+
+
 
             # Производство
             prod_zone = QWidget()
@@ -424,10 +477,12 @@ class APSApp(QMainWindow):
             self.grid_layout.addWidget(prod_zone, grid_row, 1, alignment=Qt.AlignTop)
 
             # Очередь – горизонтальный контейнер
+            # Для каждого ресурса
             queue_zone = DropZone('queue', resource_id=res.id)
-            old_layout = queue_zone.layout()
-            if old_layout:
-                QWidget().setLayout(old_layout)
+            # Удаляем старый layout, если был
+            if queue_zone.layout():
+                QWidget().setLayout(queue_zone.layout())
+            # Создаём новый горизонтальный layout
             hor_layout = QHBoxLayout(queue_zone)
             hor_layout.setAlignment(Qt.AlignLeft)
             hor_layout.setContentsMargins(5, 5, 5, 5)
@@ -466,6 +521,29 @@ class APSApp(QMainWindow):
         min_width = 220 + 220 + max_queue_width + 40
         self.right_widget.setMinimumWidth(min_width)
 
+    def open_resource_info(self, resource):
+        dlg = QDialog(self)
+        dlg.setWindowTitle(f"Ресурс: {resource.name}")
+        dlg.resize(350, 250)
+        layout = QFormLayout(dlg)
+
+        tasks = get_tasks_for_resource(resource.id)
+        active = next((t for t in tasks if t['status'] == 'active'), None)
+        pending_count = sum(1 for t in tasks if t['status'] == 'pending')
+
+        layout.addRow("ID:", QLabel(resource.id))
+        layout.addRow("Статус:", QLabel(resource.status))
+        layout.addRow("Надёжность:", QLabel(f"{getattr(resource, 'reliability', 1.0):.2f}"))
+        layout.addRow("Заказов в очереди:", QLabel(str(pending_count)))
+        layout.addRow("Активный заказ:", QLabel(active['operation_id'] if active else "нет"))
+        layout.addRow("Ремонт:", QLabel("да" if getattr(resource, 'repair', 0) else "нет"))
+
+        btn_close = QPushButton("Закрыть")
+        btn_close.clicked.connect(dlg.accept)
+        layout.addRow(btn_close)
+
+        dlg.exec()
+
     def show_dashboard(self):
         self.tabs.setCurrentIndex(0)
         self.refresh_dashboard()
@@ -477,6 +555,29 @@ class APSApp(QMainWindow):
             self.refresh_dashboard()
         except:
             pass
+
+    # def run_rl_plan(self):
+    #     if not self.core.rl_agent:
+    #         QMessageBox.critical(self, "Ошибка", "Сначала загрузите RL-модель во вкладке «Обучение».")
+    #         return
+    #     self.statusBar().showMessage("Построение плана с помощью RL...")
+    #     # Запускаем в отдельном потоке? Не обязательно, RL работает быстро.
+    #     self.core.plan_with_rl()
+    #     self.statusBar().showMessage("План построен", 5000)
+    #     if self.core.current_schedule:
+    #         self.day_combo.setCurrentText(self.core.selected_date.strftime("%Y-%m-%d"))
+    #         self.draw_milp_plan()
+    #     self.show_dashboard()
+
+    def run_rl_plan(self):
+        if self.core.rl_agent:
+            self.core.plan_with_rl()
+        else:
+            self.core.run_milp()  # теперь это быстрая эвристика
+        self.statusBar().showMessage("План построен", 5000)
+        if self.core.current_schedule:
+            self.draw_milp_plan()
+        self.show_dashboard()
 
     # ---------- RL-совет ----------
     def show_rl_advice(self):
@@ -490,43 +591,47 @@ class APSApp(QMainWindow):
         if not ready_ops:
             QMessageBox.information(self, "RL", "Нет готовых операций.")
             return
-        ext_state, op_feat, mask = self._build_state_for_agent(env, ready_ops)
-        try:
-            action, _ = self.core.rl_agent.select_action(ext_state, op_feat, mask)
-            chosen_op = ready_ops[action]['op_id']
-            model_name = self.core.settings.get('bc_model_path', 'неизвестно')
-            QMessageBox.information(self, "Рекомендация RL", f"Модель: {model_name}\nПредлагается запустить: {chosen_op}")
-        except Exception as e:
-            QMessageBox.critical(self, "Ошибка RL", str(e))
 
-    def _build_state_for_agent(self, env, ready_ops):
-        state = env._get_state()
-        busy = np.array([1.0 if env.resource_remaining[rid] > 0 else 0.0 for rid in env.resource_ids])
-        ext_state = np.concatenate([state, busy])
-        op_feat = np.zeros((env.max_actions, 5))
-        mask = np.zeros(env.max_actions, dtype=bool)
-        for i, op_info in enumerate(ready_ops):
-            if i >= env.max_actions:
-                break
-            op_id = op_info['op_id']
-            rid = op_info['resource_id']
-            due_min = 0; rem_time = 0; weight = 0; progress = 0
-            for order in env.orders:
-                for op in order.ops:
-                    if op.id == op_id:
-                        due_min = (order.due_date - env.start_datetime).total_seconds() / 60.0
-                        rem_time = env.op_remaining[op.id]
-                        weight = order.priority_weight
-                        completed = sum(1 for o in order.ops if env.op_status[o.id] == 'completed')
-                        progress = completed / len(order.ops)
-                        break
-            slack = (due_min - env.current_time) / 1440.0
-            rem_time_norm = rem_time / 1440.0
-            weight_norm = weight / 10.0
-            res_free = 0.0 if env.resource_remaining[rid] > 0 else 1.0
-            op_feat[i] = [slack, rem_time_norm, weight_norm, progress, res_free]
-            mask[i] = True
-        return ext_state, op_feat, mask
+        if isinstance(self.core.rl_agent, PointerNetAgent):
+            res_feat, op_feat, mask = self.core._build_pointer_input(env, ready_ops)
+            action, _ = self.core.rl_agent.select_action(res_feat, op_feat, mask)
+        else:
+            ext_state, op_feat, mask = self.core._build_state_for_agent(env, ready_ops)
+            action, _ = self.core.rl_agent.select_action(ext_state, op_feat, mask)
+
+        chosen = ready_ops[action]
+        model_name = self.core.settings.get('model_path', 'неизвестно')
+        QMessageBox.information(self, "Рекомендация RL",
+                                f"Модель: {model_name}\nПредлагается запустить: {chosen['op_id']}")
+
+    # def _build_state_for_agent(self, env, ready_ops):
+    #     state = env._get_state()
+    #     busy = np.array([1.0 if env.resource_remaining[rid] > 0 else 0.0 for rid in env.resource_ids])
+    #     ext_state = np.concatenate([state, busy])
+    #     op_feat = np.zeros((env.max_actions, 5))
+    #     mask = np.zeros(env.max_actions, dtype=bool)
+    #     for i, op_info in enumerate(ready_ops):
+    #         if i >= env.max_actions:
+    #             break
+    #         op_id = op_info['op_id']
+    #         rid = op_info['resource_id']
+    #         due_min = 0; rem_time = 0; weight = 0; progress = 0
+    #         for order in env.orders:
+    #             for op in order.ops:
+    #                 if op.id == op_id:
+    #                     due_min = (order.due_date - env.start_datetime).total_seconds() / 60.0
+    #                     rem_time = env.op_remaining[op.id]
+    #                     weight = order.priority_weight
+    #                     completed = sum(1 for o in order.ops if env.op_status[o.id] == 'completed')
+    #                     progress = completed / len(order.ops)
+    #                     break
+    #         slack = (due_min - env.current_time) / 1440.0
+    #         rem_time_norm = rem_time / 1440.0
+    #         weight_norm = weight / 10.0
+    #         res_free = 0.0 if env.resource_remaining[rid] > 0 else 1.0
+    #         op_feat[i] = [slack, rem_time_norm, weight_norm, progress, res_free]
+    #         mask[i] = True
+    #     return ext_state, op_feat, mask
 
     # ---------- ЗАКАЗЫ ----------
     def create_orders_tab(self):
@@ -540,14 +645,28 @@ class APSApp(QMainWindow):
         form_layout.addRow("Номер заказа (необязательно):", self.order_num_edit)
         self.due_edit = QLineEdit("2026-05-10 08:00")
         form_layout.addRow("Дата сдачи:", self.due_edit)
-        self.prio_spin = QDoubleSpinBox(); self.prio_spin.setRange(0.5, 2.0); self.prio_spin.setValue(1.0)
+        self.prio_spin = QDoubleSpinBox();
+        self.prio_spin.setRange(0.5, 2.0);
+        self.prio_spin.setValue(1.0)
         form_layout.addRow("Приоритет:", self.prio_spin)
-        self.ops_layout = QVBoxLayout()
-        self.add_operation_row()
-        form_layout.addRow("Операции:", self.ops_layout)
-        add_op_btn = QPushButton("+ Добавить операцию")
-        add_op_btn.clicked.connect(self.add_operation_row)
-        form_layout.addRow(add_op_btn)
+
+        # Фиксированная единственная операция
+        types = get_operation_types()
+        self.op_type_combo = QComboBox()
+        self.op_type_combo.addItems(types.values() if types else ["Нет типов"])
+        form_layout.addRow("Тип операции:", self.op_type_combo)
+
+        self.op_dur_edit = QLineEdit("60")
+        form_layout.addRow("Длительность (мин):", self.op_dur_edit)
+
+        self.op_item_edit = QLineEdit("Деталь_1")
+        form_layout.addRow("Изделие:", self.op_item_edit)
+
+        self.op_qty_edit = QLineEdit("1")
+        form_layout.addRow("Кол-во:", self.op_qty_edit)
+
+        # Удаляем все старые динамические строки (ops_layout, add_operation_row) – больше не нужны
+
         save_btn = QPushButton("Сохранить заказ")
         save_btn.clicked.connect(self.save_order)
         form_layout.addRow(save_btn)
@@ -558,7 +677,8 @@ class APSApp(QMainWindow):
         gen_btn.clicked.connect(lambda: self.core.generate_random_orders(10))
         layout.addWidget(gen_btn)
         load_erp_btn = QPushButton("Загрузить из ERP (JSON)")
-        load_erp_btn.clicked.connect(lambda: self.core.load_erp_orders(self.core.settings.get('erp_file', 'erp_orders.json')))
+        load_erp_btn.clicked.connect(
+            lambda: self.core.load_erp_orders(self.core.settings.get('erp_file', 'erp_orders.json')))
         layout.addWidget(load_erp_btn)
 
         self.order_table = QTableWidget()
@@ -585,6 +705,15 @@ class APSApp(QMainWindow):
         self.ops_widgets.append((type_combo, dur_edit, item_edit, qty_edit))
         self.ops_layout.addLayout(row)
 
+    def open_order_editor(self, op_id):
+        order = self.core._get_order_by_op(op_id)
+        if not order:
+            return
+        dlg = OrderEditDialog(order, self.core, self)
+        if dlg.exec():
+            self.core.orders_changed.emit()
+            self.core.dashboard_changed.emit()
+
     def save_order(self):
         try:
             name = self.order_name_edit.text().strip()
@@ -592,14 +721,14 @@ class APSApp(QMainWindow):
             due = datetime.strptime(self.due_edit.text(), "%Y-%m-%d %H:%M")
             prio = self.prio_spin.value()
             type_map = get_operation_types()
-            ops = []
-            for tc, de, ie, qe in self.ops_widgets:
-                dur = float(de.text())
-                item = ie.text()
-                type_name = tc.currentText()
-                type_id = next((tid for tid, tn in type_map.items() if tn == type_name), None)
-                qty = int(qe.text()) if qe.text() else 1
-                ops.append({'item': item, 'duration': dur, 'type_id': type_id, 'quantity': qty})
+            type_name = self.op_type_combo.currentText()
+            type_id = next((tid for tid, tn in type_map.items() if tn == type_name), None)
+            ops = [{
+                'item': self.op_item_edit.text(),
+                'duration': float(self.op_dur_edit.text()),
+                'type_id': type_id,
+                'quantity': int(self.op_qty_edit.text()) if self.op_qty_edit.text() else 1
+            }]
             self.core.create_order(due, prio, name, order_num, ops)
             self.refresh_dashboard()
         except Exception as e:
@@ -622,13 +751,24 @@ class APSApp(QMainWindow):
         planning_tab = QWidget()
         layout = QVBoxLayout(planning_tab)
         btn_layout = QHBoxLayout()
-        milp_btn = QPushButton("Построить MILP-план")
+
+        # Основная быстрая кнопка – RL‑план
+        rl_plan_btn = QPushButton("Построить план (RL)")
+        rl_plan_btn.clicked.connect(self.run_rl_plan)
+        btn_layout.addWidget(rl_plan_btn)
+
+        # Кнопка точного MILP (медленного)
+        milp_btn = QPushButton("Точный MILP‑план (медленно)")
         milp_btn.clicked.connect(self.run_milp)
         btn_layout.addWidget(milp_btn)
+
+        # Существующая кнопка «Применить фиксированные и перестроить»
         fixed_btn = QPushButton("Применить фиксированные и перестроить")
         fixed_btn.clicked.connect(self.run_fixed_milp)
         btn_layout.addWidget(fixed_btn)
+
         layout.addLayout(btn_layout)
+
         self.planning_scene = QGraphicsScene()
         self.planning_view = QGraphicsView(self.planning_scene)
         self.planning_view.setRenderHint(QPainter.Antialiasing)
@@ -1087,14 +1227,23 @@ class APSApp(QMainWindow):
         self.slim_thread.start()
 
     def load_model(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Выберите модель", "", "PyTorch (*.pth);;All (*.*)")
+        path, _ = QFileDialog.getOpenFileName(self, "Выберите модель", "",
+                                              "PyTorch (*.pth);;Pickle (*.pkl);;All (*.*)")
         if not path:
             return
         model_name = os.path.splitext(os.path.basename(path))[0]
         set_model_path(model_name, path)
-        self.core.loaded_model_name = model_name
         self.core.settings['model_path'] = path
+        self.core.loaded_model_name = model_name
         self.model_status_label.setText(f"Загружена модель: {model_name}")
+
+        # Создаём RL-агента
+        success = self.core.load_rl_model_if_available()
+        if success:
+            self.model_status_label.setText(f"Загружена модель: {self.core.loaded_model_name} (агент активен)")
+            self.statusBar().showMessage("RL-агент активирован", 3000)
+        else:
+            self.model_status_label.setText(f"Модель выбрана, но не удалось создать агента")
 
     def train_pointer_net(self):
         self.train_series.clear()
@@ -1299,7 +1448,8 @@ class APSApp(QMainWindow):
         return completed_tab
 
     def refresh_completed_table(self):
-        completed = self.core.get_completed_tasks()
+        # Используем функцию из database.py
+        completed = get_completed_tasks()
         self.completed_table.setRowCount(len(completed))
         for i, task in enumerate(completed):
             self.completed_table.setItem(i, 0, QTableWidgetItem(task['operation_id']))
@@ -1316,6 +1466,72 @@ class APSApp(QMainWindow):
             QMessageBox.warning(self, "Предупреждение", text)
         elif typ == 'error':
             QMessageBox.critical(self, "Ошибка", text)
+
+class OrderEditDialog(QDialog):
+    def __init__(self, order, core, parent=None):
+        super().__init__(parent)
+        self.order = order
+        self.core = core
+        self.setWindowTitle(f"Заказ: {order.id}")
+        self.resize(400, 350)
+        layout = QFormLayout(self)
+
+        self.name_edit = QLineEdit(order.name)
+        layout.addRow("Название:", self.name_edit)
+
+        self.due_edit = QLineEdit(order.due_date.strftime("%Y-%m-%d %H:%M"))
+        layout.addRow("Дата сдачи:", self.due_edit)
+
+        self.prio_spin = QDoubleSpinBox()
+        self.prio_spin.setRange(0.5, 2.0)
+        self.prio_spin.setValue(order.priority_weight)
+        layout.addRow("Приоритет:", self.prio_spin)
+
+        if order.ops:
+            op = order.ops[0]
+            self.type_combo = QComboBox()
+            types = get_operation_types()
+            self.type_combo.addItems(types.values())
+            if op.type_id and op.type_id in types:
+                self.type_combo.setCurrentText(types[op.type_id])
+            layout.addRow("Тип операции:", self.type_combo)
+
+            self.dur_edit = QLineEdit(str(op.norm_duration))
+            layout.addRow("Длит. (мин):", self.dur_edit)
+
+            self.item_edit = QLineEdit(op.item)
+            layout.addRow("Изделие:", self.item_edit)
+
+            self.qty_edit = QLineEdit(str(op.quantity))
+            layout.addRow("Кол-во:", self.qty_edit)
+
+        # Кнопки
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.save_changes)
+        buttons.rejected.connect(self.reject)
+        layout.addRow(buttons)
+
+    def save_changes(self):
+        try:
+            self.order.name = self.name_edit.text()
+            self.order.due_date = datetime.strptime(self.due_edit.text(), "%Y-%m-%d %H:%M")
+            self.order.priority_weight = self.prio_spin.value()
+
+            if self.order.ops:
+                op = self.order.ops[0]
+                type_map = get_operation_types()
+                type_name = self.type_combo.currentText()
+                op.type_id = next((tid for tid, tn in type_map.items() if tn == type_name), None)
+                op.norm_duration = float(self.dur_edit.text())
+                op.item = self.item_edit.text()
+                op.quantity = int(self.qty_edit.text())
+
+            from database import save_orders_to_db
+            save_orders_to_db([self.order])
+            self.core.message_signal.emit("info", f"Заказ {self.order.id} обновлён.")
+            self.accept()
+        except Exception as e:
+            QMessageBox.critical(self, "Ошибка", str(e))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -67,11 +67,11 @@ class HybridAPS:
         fixed = get_fixed_operations()
         self.current_schedule = build_milp_schedule(self.orders, list(self.resources.values()), self.current_time, fixed_ops=fixed)
 
-    def handle_mes_event(self, event):
-        if event.event_type == 'complete':
-            log_execution(event.operation_id, event.timestamp, event.timestamp + timedelta(minutes=event.actual_duration),
-                          event.resource_id, '')
-            self._operational_dispatch(event.resource_id)
+    # def handle_mes_event(self, event):
+    #     if event.event_type == 'complete':
+    #         log_execution(event.operation_id, event.timestamp, event.timestamp + timedelta(minutes=event.actual_duration),
+    #                       event.resource_id, '')
+    #         self._operational_dispatch(event.resource_id)
 
     def _operational_dispatch(self, resource_id):
         """Оперативная диспетчеризация: CR или RL (PPO/BC)"""
