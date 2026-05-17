@@ -21,7 +21,7 @@ from PySide6.QtWidgets import QFileDialog   # если ещё нет
 from training import TrainingSignals, Trainer
 from train_slim import SelfLabelingTrainer
 
-from core import APSCore, PointerNetAgent
+from core import APSCore, PointerNetAgent, SimpleAgent
 from database import (
     get_operation_types, get_state_types, get_tasks_for_resource,
     delete_task_from_queue, get_resource_operation_types, get_operation_types, get_completed_tasks
@@ -163,11 +163,11 @@ class TaskCard(QFrame):
         self.setCursor(Qt.OpenHandCursor)
 
 
-        def mouseDoubleClickEvent(self, event):
-            main_win = self.window()
-            if main_win and hasattr(main_win, 'open_order_editor'):
-                main_win.open_order_editor(self.op_id)
-            super().mouseDoubleClickEvent(event)
+    def mouseDoubleClickEvent(self, event):
+        main_win = self.window()
+        if main_win and hasattr(main_win, 'open_order_editor'):
+            main_win.open_order_editor(self.op_id)
+        super().mouseDoubleClickEvent(event)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -303,12 +303,18 @@ class APSApp(QMainWindow):
         self.day_combo.currentTextChanged.connect(self.on_date_changed)
         top_frame.addWidget(self.day_combo)
         top_frame.addStretch()
+        start_btn = QPushButton("В работу")
+        start_btn.clicked.connect(self.core.start_all_queues)
+        top_frame.addWidget(start_btn)
         approve_btn = QPushButton("Утвердить текущий план")
         approve_btn.clicked.connect(self.core.approve_plan)
         top_frame.addWidget(approve_btn)
         advise_btn = QPushButton("RL-совет")
         advise_btn.clicked.connect(self.show_rl_advice)
         top_frame.addWidget(advise_btn)
+        reset_btn = QPushButton("Сбросить в нераспределённые")
+        reset_btn.clicked.connect(self.core.reset_all_queues)
+        top_frame.addWidget(reset_btn)
         layout.addLayout(top_frame)
 
         main_hbox = QHBoxLayout()
@@ -387,12 +393,13 @@ class APSApp(QMainWindow):
         for order in self.core.orders:
             for op in order.ops:
                 if op.id not in scheduled_ids:
-                    type_name = type_map.get(op.type_id, "—")
+                    type_name = type_map.get(op.type_id, "Без типа") if op.type_id else "Без типа"
                     text = (f"Заказ №{order.id.split('_')[-1]}\n"
-                            f"{order.name}\n"
                             f"{op.item}\n"
-                            f"{op.norm_duration} мин | {type_name}\n"
-                            f"Кол-во: {op.quantity}")
+                            f"Тип: {type_name}\n"
+                            f"Срок: {order.due_date.strftime('%d.%m.%y %H:%M')}\n"
+                            f"Длит: {op.norm_duration} мин\n"
+                            f"Кол-во: {int(op.quantity)}")
                     card = TaskCard(op.id, text, bg_color="#ffffff", top_strip_color="#F9E2AF", status="Новый", text_color="black")
                     backlog_layout.addWidget(card)
 
@@ -463,12 +470,13 @@ class APSApp(QMainWindow):
                 op = self.core._get_operation_by_id(op_id)
                 if op:
                     order = self.core._get_order_by_op(op_id)
-                    type_name = type_map.get(op.type_id, "—")
+                    type_name = type_map.get(op.type_id, "Без типа") if op.type_id else "Без типа"
                     text = (f"Заказ №{order.id.split('_')[-1]}\n"
-                            f"{order.name}\n"
                             f"{op.item}\n"
-                            f"{op.norm_duration} мин | {type_name}\n"
-                            f"Кол-во: {op.quantity}")
+                            f"Тип: {type_name}\n"
+                            f"Срок: {order.due_date.strftime('%d.%m.%y %H:%M')}\n"
+                            f"Длит: {op.norm_duration} мин\n"
+                            f"Кол-во: {int(op.quantity)}")
                     card = TaskCard(op_id, text, bg_color="#ffffff", top_strip_color="#A6E3A1", status="В работе", text_color="black")
                     btn = QPushButton("Завершить")
                     btn.clicked.connect(lambda checked=False, oid=op_id: self.core.complete_task(oid))
@@ -493,12 +501,13 @@ class APSApp(QMainWindow):
                 op = self.core._get_operation_by_id(op_id)
                 if op:
                     order = self.core._get_order_by_op(op_id)
-                    type_name = type_map.get(op.type_id, "—")
+                    type_name = type_map.get(op.type_id, "Без типа") if op.type_id else "Без типа"
                     text = (f"Заказ №{order.id.split('_')[-1]}\n"
-                            f"{order.name}\n"
                             f"{op.item}\n"
-                            f"{op.norm_duration} мин | {type_name}\n"
-                            f"Кол-во: {op.quantity}")
+                            f"Тип: {type_name}\n"
+                            f"Срок: {order.due_date.strftime('%d.%m.%y %H:%M')}\n"
+                            f"Длит: {op.norm_duration} мин\n"
+                            f"Кол-во: {int(op.quantity)}")
                     card = TaskCard(op_id, text, bg_color="#ffffff", top_strip_color="#89B4FA", status="Запущен", text_color="black")
                     hor_layout.addWidget(card)
 
@@ -527,20 +536,44 @@ class APSApp(QMainWindow):
         dlg.resize(350, 250)
         layout = QFormLayout(dlg)
 
+        layout.addRow("ID:", QLabel(resource.id))
+        layout.addRow("Статус:", QLabel(resource.status))
+
+        reliability_edit = QDoubleSpinBox()
+        reliability_edit.setRange(0.0, 1.0)
+        reliability_edit.setSingleStep(0.05)
+        reliability_edit.setValue(getattr(resource, 'reliability', 1.0))
+        layout.addRow("Готовность (0-1):", reliability_edit)
+
+        repair_check = QCheckBox("Ресурс в ремонте")
+        repair_check.setChecked(getattr(resource, 'repair', 0) == 1)
+        layout.addRow("Ремонт:", repair_check)
+
         tasks = get_tasks_for_resource(resource.id)
         active = next((t for t in tasks if t['status'] == 'active'), None)
         pending_count = sum(1 for t in tasks if t['status'] == 'pending')
-
-        layout.addRow("ID:", QLabel(resource.id))
-        layout.addRow("Статус:", QLabel(resource.status))
-        layout.addRow("Надёжность:", QLabel(f"{getattr(resource, 'reliability', 1.0):.2f}"))
         layout.addRow("Заказов в очереди:", QLabel(str(pending_count)))
         layout.addRow("Активный заказ:", QLabel(active['operation_id'] if active else "нет"))
-        layout.addRow("Ремонт:", QLabel("да" if getattr(resource, 'repair', 0) else "нет"))
 
-        btn_close = QPushButton("Закрыть")
-        btn_close.clicked.connect(dlg.accept)
-        layout.addRow(btn_close)
+        # Кнопки Сохранить / Отмена
+        btn_layout = QHBoxLayout()
+        save_btn = QPushButton("Сохранить")
+        cancel_btn = QPushButton("Отмена")
+        btn_layout.addWidget(save_btn)
+        btn_layout.addWidget(cancel_btn)
+        layout.addRow(btn_layout)
+
+        def save_changes():
+            resource.reliability = reliability_edit.value()
+            resource.repair = 1 if repair_check.isChecked() else 0
+            from database import save_resources
+            save_resources(self.core.resources)  # пишем в БД
+            self.core.dashboard_changed.emit()  # обновим индикаторы на дашборде
+            self.statusBar().showMessage(f"Ресурс {resource.name} сохранён", 3000)
+            dlg.accept()
+
+        save_btn.clicked.connect(save_changes)
+        cancel_btn.clicked.connect(dlg.reject)
 
         dlg.exec()
 
@@ -557,10 +590,8 @@ class APSApp(QMainWindow):
             pass
 
     def run_rl_plan(self):
-        if self.core.rl_agent:
-            self.core.plan_with_rl()
-        else:
-            self.core.run_milp()  # теперь это быстрая эвристика
+        self.core.plan_with_reliability()
+        self.core.start_all_queues()  # <-- сразу запускаем очереди
         self.statusBar().showMessage("План построен", 5000)
         if self.core.current_schedule:
             self.draw_milp_plan()
@@ -568,28 +599,140 @@ class APSApp(QMainWindow):
 
     # ---------- RL-совет ----------
     def show_rl_advice(self):
+        # Если агент не загружен – эвристический совет
         if not self.core.rl_agent:
-            QMessageBox.information(self, "RL", "Сначала загрузите модель (BC или PPO) во вкладке «Обучение».")
-            return
-        from job_shop_env import JobShopEnv
-        env = JobShopEnv(self.core.orders, self.core.resources)
-        env.reset()
-        ready_ops = env.get_ready_ops_list()
-        if not ready_ops:
-            QMessageBox.information(self, "RL", "Нет готовых операций.")
+            self._heuristic_advice()
             return
 
-        if isinstance(self.core.rl_agent, PointerNetAgent):
-            res_feat, op_feat, mask = self.core._build_pointer_input(env, ready_ops)
-            action, _ = self.core.rl_agent.select_action(res_feat, op_feat, mask)
+        # Находим первую неразмещённую операцию
+        unscheduled = []
+        for order in self.core.orders:
+            for op in order.ops:
+                if op.id not in self.core.current_schedule and op.id not in self.core.approved_schedule:
+                    unscheduled.append((order, op))
+                    break
+            if unscheduled:
+                break
+        if not unscheduled:
+            QMessageBox.information(self, "RL‑совет", "Нет неразмещённых операций.")
+            return
+
+        order, op = unscheduled[0]
+
+        # Допустимые ресурсы для операции
+        if not hasattr(self.core, 'cached_res_op_types'):
+            self.core.cached_res_op_types = get_resource_operation_types()
+        allowed_rids = self.core.cached_res_op_types.get(op.type_id, []) if op.type_id else list(
+            self.core.resource_map.keys())
+        if not allowed_rids:
+            allowed_rids = list(self.core.resource_map.keys())
+
+        try:
+            if isinstance(self.core.rl_agent, PointerNetAgent):
+                # Используем старый метод для PointerNetAgent (три аргумента)
+                res_feat, op_feat, mask = self.core._build_pointer_input(None,
+                                                                         [{'op_id': op.id, 'resource_id': r} for r in
+                                                                          allowed_rids])
+                action, _ = self.core.rl_agent.select_action(res_feat, op_feat, mask)
+                chosen_res = allowed_rids[action] if action < len(allowed_rids) else allowed_rids[0]
+            elif isinstance(self.core.rl_agent, SimpleAgent):
+                # Для SimpleAgent строим плоский вектор (36 признаков) и вызываем select_action(X)
+                full_vec = self._build_flat_state_for_advice(order, op, allowed_rids)
+                action_idx = self.core.rl_agent.select_action(full_vec)
+                chosen_res = self.core.resources[action_idx].id if action_idx < len(self.core.resources) else \
+                allowed_rids[0]
+            else:
+                self._heuristic_advice()
+                return
+        except Exception as e:
+            QMessageBox.warning(self, "Ошибка совета", str(e))
+            self._heuristic_advice()
+            return
+
+        QMessageBox.information(self, "RL‑совет",
+                                f"Операция: {op.id} (заказ {order.id})\n"
+                                f"Нейросеть рекомендует ресурс: {chosen_res} "
+                                f"(готовность {self.core.resource_map[chosen_res].reliability:.2f})")
+
+    def _build_flat_state_for_advice(self, order, op, allowed_rids):
+        """Строит плоский вектор признаков (36 чисел) для SimpleAgent."""
+        import numpy as np
+        type_map = get_operation_types()
+        type_list = ['фрезеровка', 'сборка', 'сварка']
+        type_to_idx = {name: i for i, name in enumerate(type_list)}
+
+        # Признаки операции (6)
+        type_onehot = np.zeros(3)
+        if op.type_id:
+            tname = type_map.get(op.type_id, '')
+            if tname in type_to_idx:
+                type_onehot[type_to_idx[tname]] = 1.0
+        op_feat = np.array([
+            *type_onehot,
+            op.norm_duration / 120.0,
+            order.priority_weight,
+            (op.slack_hours if hasattr(op, 'slack_hours') else 0) / 48.0
+        ])
+
+        # Признаки ресурсов (R * 6)
+        R = len(self.core.resources)
+        res_feats = []
+        for i, res in enumerate(self.core.resources):
+            cur_load = 0.0  # упрощённо, т.к. это совет
+            compat = 1.0 if res.id in allowed_rids else 0.0
+            res_vec = np.array([
+                1.0 if res.status == 'Работает' else 0.0,
+                cur_load,
+                compat,
+                res.load_minutes / 240.0,
+                float(res.repair),
+                res.reliability
+            ])
+            res_feats.append(res_vec)
+        return np.concatenate([op_feat] + res_feats)
+
+    def _heuristic_advice(self):
+        """Эвристический совет, когда модель не загружена."""
+        unscheduled = []
+        for order in self.core.orders:
+            for op in order.ops:
+                if op.id not in self.core.current_schedule and op.id not in self.core.approved_schedule:
+                    unscheduled.append((order, op))
+                    break
+            if unscheduled:
+                break
+        if not unscheduled:
+            QMessageBox.information(self, "Совет", "Нет неразмещённых операций.")
+            return
+
+        if not hasattr(self.core, 'cached_res_op_types'):
+            self.core.cached_res_op_types = get_resource_operation_types()
+
+        order, op = unscheduled[0]
+        if op.type_id:
+            allowed_rids = self.core.cached_res_op_types.get(op.type_id, [])
         else:
-            ext_state, op_feat, mask = self.core._build_state_for_agent(env, ready_ops)
-            action, _ = self.core.rl_agent.select_action(ext_state, op_feat, mask)
+            allowed_rids = list(self.core.resource_map.keys())
+        if not allowed_rids:
+            allowed_rids = list(self.core.resource_map.keys())
 
-        chosen = ready_ops[action]
-        model_name = self.core.settings.get('model_path', 'неизвестно')
-        QMessageBox.information(self, "Рекомендация RL",
-                                f"Модель: {model_name}\nПредлагается запустить: {chosen['op_id']}")
+        now = datetime.now()
+        work_until = {r.id: now for r in self.core.resources}
+
+        def effective_load(rid):
+            rel = self.core.resource_map[rid].reliability
+            if rel <= 0:
+                return float('inf')
+            if self.core.resource_map[rid].repair:
+                rel *= 0.5
+            workload = (work_until[rid] - now).total_seconds() / 60.0
+            return workload / rel
+
+        best_rid = min(allowed_rids, key=effective_load)
+        QMessageBox.information(self, "Совет",
+                                f"Для операции {op.id} (заказ {order.id})\n"
+                                f"Рекомендуется ресурс: {best_rid} "
+                                f"(готовность {self.core.resource_map[best_rid].reliability:.2f})")
 
 
     # ---------- ЗАКАЗЫ ----------
@@ -680,8 +823,14 @@ class APSApp(QMainWindow):
             due = datetime.strptime(self.due_edit.text(), "%Y-%m-%d %H:%M")
             prio = self.prio_spin.value()
             type_map = get_operation_types()
+            if not type_map:
+                QMessageBox.critical(self, "Ошибка", "Сначала добавьте типы операций на вкладке «Оборудование → Типы».")
+                return
             type_name = self.op_type_combo.currentText()
             type_id = next((tid for tid, tn in type_map.items() if tn == type_name), None)
+            if type_id is None:
+                QMessageBox.critical(self, "Ошибка", "Выберите корректный тип операции.")
+                return
             ops = [{
                 'item': self.op_item_edit.text(),
                 'duration': float(self.op_dur_edit.text()),
@@ -738,11 +887,11 @@ class APSApp(QMainWindow):
         if not self.core.orders:
             QMessageBox.critical(self, "Ошибка", "Сначала создайте заказы.")
             return
-        self.statusBar().showMessage("Идёт построение MILP-плана...")
-        self.milp_thread = MILPWorker(self.core)
-        self.milp_thread.finished.connect(self.on_milp_finished)
-        self.milp_thread.error.connect(lambda msg: QMessageBox.critical(self, "Ошибка MILP", msg))
-        self.milp_thread.start()
+        self.core.plan_with_reliability()
+        self.statusBar().showMessage("План построен", 5000)
+        if self.core.current_schedule:
+            self.draw_milp_plan()
+        self.show_dashboard()
 
     def run_fixed_milp(self):
         self.statusBar().showMessage("Перестроение с учётом фиксированных...")
@@ -762,33 +911,81 @@ class APSApp(QMainWindow):
         self.planning_scene.clear()
         if not self.core.current_schedule:
             return
-        valid_sched = {}
-        for op_id, info in self.core.current_schedule.items():
-            if info['resource_id'] in self.core.resource_map:
-                valid_sched[op_id] = info
+        valid_sched = {op_id: info for op_id, info in self.core.current_schedule.items()
+                       if info['resource_id'] in self.core.resource_map}
         if not valid_sched:
             return
-        all_starts = [v['start'] for v in valid_sched.values()]
-        all_ends = [v['end'] for v in valid_sched.values()]
-        min_time = min(all_starts)
-        max_time = max(all_ends)
+
+        type_map = get_operation_types()
+        # Цвета для разных типов
+        type_colors = {
+            'фрезеровка': QColor("#A6E3A1"),  # светло-зелёный
+            'сборка': QColor("#89B4FA"),  # голубой
+            'сварка': QColor("#FAB387")  # оранжевый
+        }
+        default_color = QColor("#CBA6F7")  # фиолетовый для неопознанных
+
+        # Определяем временной диапазон
+        min_time = min(v['start'] for v in valid_sched.values())
+        max_time = max(v['end'] for v in valid_sched.values())
         total_seconds = (max_time - min_time).total_seconds()
         if total_seconds <= 0:
             return
+
         width = 800
         y_step = 40
-        used_rids = list(set(info['resource_id'] for info in valid_sched.values()))
-        used_rids.sort()
+        used_rids = sorted(set(info['resource_id'] for info in valid_sched.values()))
         resource_y = {rid: 20 + i * y_step for i, rid in enumerate(used_rids)}
+
+        # Названия ресурсов (слева)
         for rid, y in resource_y.items():
-            name = self.core.resource_map[rid].name if rid in self.core.resource_map else rid
+            name = self.core.resource_map[rid].name
             text = self.planning_scene.addText(name)
-            text.setPos(10, y)
+            text.setPos(5, y)
+            text.setDefaultTextColor(QColor("#cdd6f4"))
+            font = text.font()
+            font.setPointSize(9)
+            text.setFont(font)
+
+        # Временная шкала (упрощённая)
+        for i in range(0, int(total_seconds / 3600) + 1, 2):  # каждые 2 часа
+            x = (i * 3600) / total_seconds * (width - 150) + 150
+            tick = self.planning_scene.addLine(x, 5, x, 5 + len(used_rids) * y_step, QPen(QColor("#45475a")))
+            time_label = self.planning_scene.addText(f"{int(min_time.hour) + i}:00")
+            time_label.setPos(x - 15, 0)
+            time_label.setDefaultTextColor(QColor("#bac2de"))
+
+        # Блоки операций
         for op_id, info in valid_sched.items():
-            x1 = (info['start'] - min_time).total_seconds() / total_seconds * (width - 20) + 10
-            x2 = (info['end'] - min_time).total_seconds() / total_seconds * (width - 20) + 10
+            op = self.core._get_operation_by_id(op_id)
+            if not op:
+                continue
+            x1 = (info['start'] - min_time).total_seconds() / total_seconds * (width - 150) + 150
+            x2 = (info['end'] - min_time).total_seconds() / total_seconds * (width - 150) + 150
             y = resource_y[info['resource_id']] + 15
-            rect = self.planning_scene.addRect(x1, y-10, x2-x1, 20, QPen(Qt.black), QBrush(QColor(173, 216, 230)))
+
+            # Цвет по типу операции
+            tname = type_map.get(op.type_id, '')
+            color = type_colors.get(tname, default_color)
+
+            rect = self.planning_scene.addRect(x1, y - 10, x2 - x1, 20, QPen(Qt.black), QBrush(color))
+            # Подпись (op_id без префикса заказа)
+            short_id = op.id.split('_')[-1]  # например, "оп1"
+            lbl = self.planning_scene.addText(short_id)
+            lbl.setPos(x1 + 2, y - 10)
+            lbl.setDefaultTextColor(QColor("#1e1e2e"))
+            font = lbl.font()
+            font.setPointSize(7)
+            lbl.setFont(font)
+
+        # Легенда
+        legend_y = 5 + len(used_rids) * y_step + 20
+        legend_x = 150
+        for i, (tname, color) in enumerate(type_colors.items()):
+            self.planning_scene.addRect(legend_x + i * 80, legend_y, 15, 15, QPen(Qt.black), QBrush(color))
+            t = self.planning_scene.addText(tname)
+            t.setPos(legend_x + i * 80 + 18, legend_y - 2)
+            t.setDefaultTextColor(QColor("#cdd6f4"))
 
     # ---------- ОБОРУДОВАНИЕ ----------
     def create_equip_tab(self):
@@ -1175,7 +1372,12 @@ class APSApp(QMainWindow):
 
         def train_and_save():
             model = self.slim_trainer.train_slim(
-                epochs=self.train_epoch_spin.value()
+                epochs=self.train_epoch_spin.value(),
+                lr=self.train_lr_spin.value(),
+                dataset_path="gpss_dataset.npz",
+                unlabeled_path="unlabeled.npz",  # <-- включаем "срезы"
+                self_label_interval=30,  # раз в 100 эпох
+                confidence_threshold=0.95
             )
             if model:
                 torch.save(model.state_dict(), "slim_pointer.pth")
@@ -1191,8 +1393,9 @@ class APSApp(QMainWindow):
         if not path:
             return
         model_name = os.path.splitext(os.path.basename(path))[0]
-        set_model_path(model_name, path)
+        set_model_path(model_name, path)  # запоминает в weights.py
         self.core.settings['model_path'] = path
+        self.core.save_settings(self.core.settings)  # <-- ДОБАВИТЬ: сохраняем в БД
         self.core.loaded_model_name = model_name
         self.model_status_label.setText(f"Загружена модель: {model_name}")
 
@@ -1238,7 +1441,7 @@ class APSApp(QMainWindow):
         self.train_thread = threading.Thread(target=train_and_save, daemon=True)
         self.train_thread.start()
 
-    def update_train_chart(self, epoch, loss):
+    def update_train_chart(self, epoch, loss, accuracy=None):
         self.train_series.append(epoch, loss)
         if self.train_series.count() > 1:
             self.train_axisX.setRange(0, epoch + 1)
@@ -1313,8 +1516,8 @@ class APSApp(QMainWindow):
             self.core,
             self.train_epoch_spin.value(),
             self.train_lr_spin.value(),
-            int(self.core.settings.get('ppo_n_orders', 30)),
-            int(self.core.settings.get('ppo_n_resources', 3)),
+            int(self.core.settings.get('ppo_n_orders', 10)),
+            5,  # n_resources жестко 5
             self.stop_event
         )
         self.ppo_thread.progress.connect(self.update_train_chart)
@@ -1407,16 +1610,21 @@ class APSApp(QMainWindow):
         return completed_tab
 
     def refresh_completed_table(self):
-        # Используем функцию из database.py
         completed = get_completed_tasks()
+        self.completed_table.setColumnCount(5)  # теперь 5 колонок
+        self.completed_table.setHorizontalHeaderLabels(["Операция", "Тип", "Заказ", "Ресурс", "Действия"])
         self.completed_table.setRowCount(len(completed))
+        type_map = get_operation_types()
         for i, task in enumerate(completed):
             self.completed_table.setItem(i, 0, QTableWidgetItem(task['operation_id']))
-            self.completed_table.setItem(i, 1, QTableWidgetItem(task['order_id']))
-            self.completed_table.setItem(i, 2, QTableWidgetItem(task['resource_name']))
+            type_name = type_map.get(task['type_id'], '—')
+            self.completed_table.setItem(i, 1, QTableWidgetItem(type_name))
+            self.completed_table.setItem(i, 2, QTableWidgetItem(task['order_id']))
+            self.completed_table.setItem(i, 3, QTableWidgetItem(task['resource_name']))
             btn_delete = QPushButton("Удалить")
-            btn_delete.clicked.connect(lambda checked=False, oid=task['operation_id']: self.core.delete_completed_task(oid))
-            self.completed_table.setCellWidget(i, 3, btn_delete)
+            btn_delete.clicked.connect(
+                lambda checked=False, oid=task['operation_id']: self.core.delete_completed_task(oid))
+            self.completed_table.setCellWidget(i, 4, btn_delete)
 
     def show_message(self, typ, text):
         if typ == 'info':

@@ -12,7 +12,9 @@ class Resource:
     operator_name: str = ""
     load_minutes: float = 0.0
     downtime_minutes: float = 0.0
+    work_hours: int = 24
     reliability: float = 1.0
+    repair: int = 0
 
 @dataclass
 class Operation:

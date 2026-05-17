@@ -20,7 +20,7 @@ from database import (
     log_resource_state, log_operation_state, get_execution_data, set_order_status
 )
 from PySide6.QtCore import QObject, Signal
-from training import ResourceOpPointerNet
+from training import ResourceOpPointerNet, SimpleDispatcher
 import torch
 
 class BCAgent:
@@ -58,6 +58,34 @@ class PointerNetAgent:
             values, _ = probs.max(dim=-1)       # (1, O)
             action = values.argmax(dim=-1).item()
             return action, None
+
+class SimpleAgent:
+    def __init__(self, model_path):
+        self.device = torch.device("cpu")
+        state = torch.load(model_path, map_location=self.device)
+
+        # Автоматически находим первый и последний Linear слои среди ключей state_dict
+        linear_weights = [k for k in state.keys() if k.endswith('.weight') and 'net.' in k]
+        if not linear_weights:
+            raise RuntimeError("В загруженной модели не найдено полносвязных слоёв (net.*.weight)")
+
+        first_weight_key = sorted(linear_weights)[0]   # например, 'net.0.weight'
+        last_weight_key  = sorted(linear_weights)[-1]  # например, 'net.6.weight'
+
+        input_dim = state[first_weight_key].shape[1]   # количество входных признаков
+        output_dim = state[last_weight_key].shape[0]   # количество классов (ресурсов)
+
+        # Создаём модель с теми же размерами
+        self.model = SimpleDispatcher(input_dim, output_dim).to(self.device)
+        self.model.load_state_dict(state)
+        self.model.eval()
+
+    def select_action(self, X):
+        """X – плоский вектор признаков (36,) → возвращает индекс ресурса."""
+        with torch.no_grad():
+            x = torch.tensor(X, dtype=torch.float32).unsqueeze(0).to(self.device)
+            logits = self.model(x)          # (1, output_dim)
+            return logits.argmax(dim=1).item()
 
 class APSCore(QObject):
     dashboard_changed = Signal()
@@ -204,7 +232,7 @@ class APSCore(QObject):
         if order_number:
             order_id = f"Заказ_{order_number}"
         else:
-            order_id = f"Заказ_{np.random.randint(100, 999)}"
+            order_id = f"Заказ_{np.random.randint(1, 99)}"
         order = Order(order_id, due_date, priority, name=name)
         for i, op_data in enumerate(operations, start=1):
             op = Operation(
@@ -276,7 +304,7 @@ class APSCore(QObject):
                 round(np.random.uniform(20, 120), 1)
             )
             op.type_id = type_id
-            op.quantity = np.random.randint(1, 10)
+            op.quantity = int(np.random.randint(1, 10))
             order.ops.append(op)
             generated.append(order)
 
@@ -302,7 +330,7 @@ class APSCore(QObject):
                 op = Operation(op_d['id'], order.id, op_d['item'], 1, op_d['norm_duration'])
                 op.predecessors = []  # больше нет зависимостей
                 op.type_id = op_d.get('type_id', '')
-                op.quantity = op_d.get('quantity', 1)
+                op.quantity = int(op_d.get('quantity', 1))
                 order.ops.append(op)
             loaded.append(order)
         self.orders.extend(loaded)
@@ -355,15 +383,24 @@ class APSCore(QObject):
         return schedule
 
     def _try_start_next_on_resource(self, resource_id):
-        """Запускает первую pending-задачу на ресурсе, если он свободен."""
+        res = self.resource_map.get(resource_id)
+        if res and (getattr(res, 'repair', 0) or getattr(res, 'reliability', 1.0) <= 0):
+            return
         tasks = get_tasks_for_resource(resource_id)
-        # Если уже есть активная задача – ничего не делаем
         if any(t['status'] == 'active' for t in tasks):
             return
-        # Ищем первую ожидающую
         pending = [t for t in tasks if t['status'] == 'pending']
         if pending:
             self.move_task_to_production(pending[0]['operation_id'], resource_id)
+
+    def start_all_queues(self):
+        """Запускает первую ожидающую задачу на каждом ресурсе, если он свободен и исправен."""
+        for res in self.resources:
+            if getattr(res, 'repair', 0) or getattr(res, 'reliability', 1.0) <= 0:
+                continue
+            self._try_start_next_on_resource(res.id)
+        self.dashboard_changed.emit()
+        self.message_signal.emit("info", "Очереди запущены.")
 
     def run_milp(self):
         """Быстрое эвристическое планирование (замена точного MILP)."""
@@ -373,6 +410,20 @@ class APSCore(QObject):
         self._sync_schedule_to_task_queue()
         self.dashboard_changed.emit()
         self.message_signal.emit("info", "Эвристический план построен.")
+
+    def reset_all_queues(self):
+        """Перемещает все задачи из очередей и планов в нераспределённые."""
+        # Удаляем из очереди и расписаний все операции
+        for res in self.resources:
+            tasks = get_tasks_for_resource(res.id)
+            for t in tasks:
+                self._remove_from_schedules(t['operation_id'])
+                delete_task_from_queue(t['operation_id'])
+        # Очищаем текущий план
+        self.current_schedule.clear()
+        # Обновляем дашборд
+        self.dashboard_changed.emit()
+        self.message_signal.emit("info", "Все задачи возвращены в нераспределённые.")
 
     def _build_state_for_agent(self, env, ready_ops):
         state = env._get_state()
@@ -496,86 +547,157 @@ class APSCore(QObject):
 
     def plan_with_rl(self):
         if not self.rl_agent:
-            self.message_signal.emit("error", "Модель не загружена. Обучите PointerNet или загрузите веса.")
+            self.message_signal.emit("error", "Модель не загружена.")
             return
 
-        # Собираем все операции, которые ещё не в approved_schedule (и не завершены)
-        all_ops = []
+        # Собираем неразмещённые операции, сортируем по EDD
+        unscheduled = []
         for order in self.orders:
             for op in order.ops:
-                if op.id not in self.approved_schedule:
-                    all_ops.append((order, op))
-
-        if not all_ops:
+                if op.id not in self.current_schedule and op.id not in self.approved_schedule:
+                    unscheduled.append((order, op))
+        if not unscheduled:
             return
+        unscheduled.sort(key=lambda x: x[0].due_date)
 
-        # Строим признаки ресурсов и операций, как в обучении
+        # Кэш типов
+        if not hasattr(self, 'cached_res_op_types'):
+            self.cached_res_op_types = get_resource_operation_types()
         type_map = get_operation_types()
-        res_types = get_resource_operation_types()
-        # возможно, у вас тип операции не задан — тогда пропускаем one-hot
-        type_list = ['фрезеровка', 'сборка', 'сварка']
-        type_to_idx = {name: i for i, name in enumerate(type_list)}
+        types_list = ['фрезеровка', 'сборка', 'сварка']
 
+        # Подготавливаем базовые признаки ресурсов
         R = len(self.resources)
-        res_feat = np.zeros((R, 7), dtype=np.float32)
+        # Для модели мы можем подкорректировать repair и reliability, чтобы не выходить за рамки обучения
+        model_repair = np.zeros(R, dtype=np.float32)
+        model_reliability = np.zeros(R, dtype=np.float32)
         for i, res in enumerate(self.resources):
-            res_feat[i, 0] = 1.0 if res.status == 'Работает' else 0.0
-            res_feat[i, 1] = res.load_minutes / 240.0
-            res_feat[i, 2] = 24.0  # work_hours (или реальное)
-            # one-hot типов
+            rel = res.reliability
+            rep = res.repair
+            # Приводим к допустимому диапазону (как в обучающей выборке)
+            if rel < 0.25:
+                rep = 1  # низкая готовность интерпретируется как ремонт
+                rel = max(rel, 0.2)  # минимальная надёжность 0.2
+            model_repair[i] = rep
+            model_reliability[i] = rel
+
+        work_until = {r.id: self.selected_date for r in self.resources}
+        schedule = {}
+
+        for order, op in unscheduled:
+            # Признаки операции (6 чисел)
             type_onehot = np.zeros(3)
-            for tid in res_types.get(res.id, []):
-                tname = type_map.get(tid, '')
-                if tname in type_to_idx:
-                    type_onehot[type_to_idx[tname]] = 1.0
-            res_feat[i, 3:6] = type_onehot
-            res_feat[i, 6] = float(res.repair)
+            if op.type_id and op.type_id in type_map:
+                tname = type_map[op.type_id]
+                if tname in types_list:
+                    type_onehot[types_list.index(tname)] = 1.0
+            op_feat = np.array([
+                *type_onehot,
+                op.norm_duration / 120.0,
+                order.priority_weight,
+                (op.slack_hours if hasattr(op, 'slack_hours') else 0) / 48.0
+            ])
 
-        O = len(all_ops)
-        op_feat = np.zeros((O, 6), dtype=np.float32)
-        for idx, (order, op) in enumerate(all_ops):
-            type_onehot = np.zeros(3)
-            if op.type_id:
-                tname = type_map.get(op.type_id, '')
-                if tname in type_to_idx:
-                    type_onehot[type_to_idx[tname]] = 1.0
-            op_feat[idx, :3] = type_onehot
-            op_feat[idx, 3] = op.norm_duration / 120.0
-            op_feat[idx, 4] = op.urgency if hasattr(op, 'urgency') else 1.0
-            op_feat[idx, 5] = (op.slack_hours if hasattr(op, 'slack_hours') else 0) / 48.0
+            # Допустимые ресурсы по типам
+            allowed = self.cached_res_op_types.get(op.type_id, []) if op.type_id else list(self.resource_map.keys())
+            if not allowed:
+                allowed = list(self.resource_map.keys())
 
-        # Получаем предсказания модели — для каждой операции выбираем ресурс с max вероятностью
-        with torch.no_grad():
-            r_t = torch.tensor(res_feat).unsqueeze(0).to(self.rl_agent.device)
-            o_t = torch.tensor(op_feat).unsqueeze(0).to(self.rl_agent.device)
-            # маска не нужна, модель сама вернёт вероятности по всем ресурсам
-            probs = self.rl_agent.model(r_t, o_t).squeeze(0)  # (O, R)
-            chosen_res_indices = probs.argmax(dim=1).cpu().numpy()
+            # Строим полный вектор признаков (6 + R*6)
+            full = op_feat.copy()
+            for i, res in enumerate(self.resources):
+                # Текущая загрузка (в минутах работы, нормированная)
+                cur_load = (work_until[res.id] - self.selected_date).total_seconds() / 60.0 / 240.0
+                compat = 1.0 if res.id in allowed else 0.0
+                res_vec = np.array([
+                    1.0 if res.status == 'Работает' else 0.0,  # ready
+                    cur_load,
+                    compat,
+                    res.load_minutes / 240.0,  # avg load
+                    model_repair[i],  # repair (скорректированный)
+                    model_reliability[i]  # reliability (скорректированная)
+                ])
+                full = np.concatenate([full, res_vec])
 
-        # Назначаем операции
-        current_time = self.selected_date  # или datetime.now()
-        self.current_schedule = {}
-        for idx, (order, op) in enumerate(all_ops):
-            rid = self.resources[chosen_res_indices[idx]].id
-            duration = timedelta(minutes=op.norm_duration)
-            start = current_time
-            end = start + duration
-            self.current_schedule[op.id] = {
-                'resource_id': rid,
-                'start': start,
-                'end': end
-            }
-            # Для простоты не моделируем очередь, но можно добавить сдвиг по времени
+            # --- Получаем логиты от модели ---
+            with torch.no_grad():
+                x = torch.tensor(full, dtype=torch.float32).unsqueeze(0)
+                logits = self.rl_agent.model(x).squeeze(0)  # (R,)
 
+            # --- Штраф за низкую готовность (постобработка) ---
+            # Используем скорректированные значения, чтобы штраф был согласован с моделью
+            effective = model_reliability * (1.0 - 0.5 * model_repair)
+            adjusted = logits + torch.tensor(np.log(effective + 1e-6))
+            best_idx = adjusted.argmax().item()
+            best_rid = self.resources[best_idx].id
+
+            # Планируем
+            start = max(work_until[best_rid], self.selected_date)
+            dur = timedelta(minutes=op.norm_duration)
+            end = start + dur
+            schedule[op.id] = {'resource_id': best_rid, 'start': start, 'end': end}
+            work_until[best_rid] = end
+
+        self.current_schedule = schedule
         self._sync_schedule_to_task_queue()
         self.dashboard_changed.emit()
-        self.message_signal.emit("info", "Мгновенный план построен (PointerNet).")
+        self.message_signal.emit("info", "План построен нейросетью с учётом готовности.")
+
+    def plan_with_reliability(self):
+        """
+        Планирование с учётом готовности ресурсов.
+        Использует эвристику EDD + эффективная загрузка (workload / reliability).
+        """
+        unscheduled = []
+        for order in self.orders:
+            for op in order.ops:
+                if op.id not in self.current_schedule and op.id not in self.approved_schedule:
+                    unscheduled.append((order, op))
+        if not unscheduled:
+            return
+
+        unscheduled.sort(key=lambda x: x[0].due_date)
+
+        if not hasattr(self, 'cached_res_op_types'):
+            self.cached_res_op_types = get_resource_operation_types()
+
+        work_until = {r.id: self.selected_date for r in self.resources}
+        schedule = {}
+
+        for order, op in unscheduled:
+            if op.type_id:
+                allowed_rids = self.cached_res_op_types.get(op.type_id, [])
+            else:
+                allowed_rids = list(self.resource_map.keys())
+            if not allowed_rids:
+                allowed_rids = list(self.resource_map.keys())
+
+            def effective_load(rid):
+                workload = (work_until[rid] - self.selected_date).total_seconds() / 60.0
+                rel = getattr(self.resource_map[rid], 'reliability', 1.0)
+                if rel <= 0.0:
+                    return float('inf')
+                if getattr(self.resource_map[rid], 'repair', 0):
+                    rel *= 0.5
+                return workload / rel
+
+            best_rid = min(allowed_rids, key=effective_load)
+            start = work_until[best_rid]
+            dur = timedelta(minutes=op.norm_duration)
+            end = start + dur
+            schedule[op.id] = {'resource_id': best_rid, 'start': start, 'end': end}
+            work_until[best_rid] = end
+
+        self.current_schedule = schedule
+        self._sync_schedule_to_task_queue()
+        self.dashboard_changed.emit()
+        self.message_signal.emit("info", "План построен с учётом готовности.")
 
     def add_resource(self, rid, name):
         if rid in self.resource_map:
             self.message_signal.emit("error", "Ресурс уже существует.")
             return
-        r = Resource(rid, name)
+        r = Resource(rid, name, reliability=1.0, repair=0)
         self.resources.append(r)
         self.resource_map[rid] = r
         save_resources(self.resources)
@@ -664,7 +786,7 @@ class APSCore(QObject):
             if path.endswith('.pkl'):
                 self.rl_agent = BCAgent(path)
             elif path.endswith('.pth'):
-                self.rl_agent = PointerNetAgent(path)
+                self.rl_agent = SimpleAgent(path)  # <-- теперь используем простую модель
             else:
                 return False
             self.loaded_model_name = os.path.splitext(os.path.basename(path))[0]

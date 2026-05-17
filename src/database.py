@@ -254,7 +254,10 @@ def load_orders_from_db(resources=None):
             if has_type and len(op_row) >= 8:
                 type_id = op_row[7] if op_row[7] else ''
             if has_quantity and len(op_row) >= 9:
-                quantity = op_row[8] if op_row[8] else 1
+                try:
+                    quantity = int(float(op_row[8])) if op_row[8] else 1
+                except (ValueError, TypeError):
+                    quantity = 1
             if has_urgency and len(op_row) >= 10:
                 urgency = op_row[9] if op_row[9] else 1.0
             if has_slack and len(op_row) >= 11:
@@ -303,10 +306,14 @@ def save_resources(resources):
     cur.execute("DELETE FROM resources")
     for r in resources:
         cur.execute("""
-            INSERT INTO resources (id, name, section, status, operator_name, load_minutes, downtime_minutes, work_hours, repair, reliability)
+            INSERT INTO resources (id, name, section, status, operator_name,
+                                   load_minutes, downtime_minutes, work_hours, repair, reliability)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (r.id, r.name, r.section, r.status, r.operator_name, r.load_minutes, r.downtime_minutes,
-              getattr(r, 'work_hours', 24), getattr(r, 'repair', 0), getattr(r, 'reliability', 1.0)))
+        """, (r.id, r.name, r.section, r.status, r.operator_name,
+              r.load_minutes, r.downtime_minutes,
+              getattr(r, 'work_hours', 24),
+              int(getattr(r, 'repair', 0)),
+              float(getattr(r, 'reliability', 1.0))))
     conn.commit()
     conn.close()
 
@@ -314,20 +321,32 @@ def load_resources():
     from datamodels import Resource
     conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
+
+    # Гарантируем наличие нужных столбцов (если база старая)
     cur.execute("PRAGMA table_info(resources)")
     cols = [c[1] for c in cur.fetchall()]
-    cur.execute("SELECT * FROM resources")
+    if 'repair' not in cols:
+        cur.execute("ALTER TABLE resources ADD COLUMN repair INTEGER DEFAULT 0")
+    if 'reliability' not in cols:
+        cur.execute("ALTER TABLE resources ADD COLUMN reliability REAL DEFAULT 1.0")
+    conn.commit()
+
+    cur.execute("""
+        SELECT id, name, section, status, operator_name,
+               load_minutes, downtime_minutes, work_hours, repair, reliability
+        FROM resources
+    """)
     resources = []
     for row in cur:
         r = Resource(id=row[0], name=row[1])
-        r.section = row[2] if len(row) > 2 and 'section' in cols and row[2] else "Основной участок"
-        r.status = row[3] if len(row) > 3 and 'status' in cols and row[3] else "Работает"
-        r.operator_name = row[4] if len(row) > 4 and 'operator_name' in cols and row[4] else ""
-        r.load_minutes = float(row[5]) if len(row) > 5 and 'load_minutes' in cols and row[5] else 0.0
-        r.downtime_minutes = float(row[6]) if len(row) > 6 and 'downtime_minutes' in cols and row[6] else 0.0
-        r.work_hours = int(row[7]) if len(row) > 7 and 'work_hours' in cols and row[7] else 24
-        r.repair = int(row[8]) if len(row) > 8 and 'repair' in cols and row[8] else 0
-        r.reliability = float(row[9]) if len(row) > 9 and 'reliability' in cols and row[9] else 1.0
+        r.section = row[2] if row[2] else "Основной участок"
+        r.status = row[3] if row[3] else "Работает"
+        r.operator_name = row[4] if row[4] else ""
+        r.load_minutes = float(row[5]) if row[5] else 0.0
+        r.downtime_minutes = float(row[6]) if row[6] else 0.0
+        r.work_hours = int(row[7]) if row[7] else 24
+        r.repair = int(row[8]) if row[8] is not None else 0
+        r.reliability = float(row[9]) if row[9] is not None else 1.0
         resources.append(r)
     conn.close()
     return resources
@@ -439,13 +458,11 @@ def update_task_status(operation_id, new_status):
     conn.close()
 
 def get_completed_tasks():
-    """Возвращает список завершённых задач."""
     conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
-    # Получаем информацию о завершённых задачах из лога и расписания
     cur.execute("""
         SELECT 
-            o.operation_id, op.order_id, op.item, o.resource_id, r.name as resource_name
+            o.operation_id, op.order_id, op.item, op.type_id, o.resource_id, r.name as resource_name
         FROM operation_state_log o
         JOIN operations op ON o.operation_id = op.id
         JOIN resources r ON o.resource_id = r.id
@@ -457,8 +474,9 @@ def get_completed_tasks():
             'operation_id': row[0],
             'order_id': row[1],
             'item': row[2],
-            'resource_id': row[3],
-            'resource_name': row[4]
+            'type_id': row[3],
+            'resource_id': row[4],
+            'resource_name': row[5]
         })
     conn.close()
     return tasks
