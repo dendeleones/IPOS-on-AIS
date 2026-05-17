@@ -177,14 +177,14 @@
 \vfill
 \ifВКР{
   \large\textbf{ВЫПУСКНАЯ КВАЛИФИКАЦИОННАЯ РАБОТА}\\
-  \large\textbf{ПО ПРОГРАММЕ БАКАЛАВРИАТА}\\
+  \large\textbf{ПО ПРОГРАММЕ МАГИСТРАТУРЫ}\\
   \vfill
   \normalsize\fillcenter{09.03.04 Программная инженерия}\\
   \renewcommand{\baselinestretch}{1}
   \footnotesize{(код, наименование ОПОП ВО: направление подготовки, направленность (профиль))}
   \renewcommand{\baselinestretch}{\interval}
 
-  \normalsize\fillcenter{«Разработка программно-информационных систем»}\\
+  \normalsize\fillcenter{«Предпринимательство, инновации и технологии будущего в программной инженерии»}\\
 }\fi
 \ifПрактика{
 	\large\textbf{ОТЧЕТ}\\
