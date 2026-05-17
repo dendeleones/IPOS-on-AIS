@@ -4,26 +4,25 @@ import sys
 import torch
 import numpy as np
 
-# Добавляем путь к корню проекта, чтобы импорты работали и из src, и из корня
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-# Также добавляем родительскую директорию (корень проекта)
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+# Убедимся, что рабочая директория – src/
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from PySide6.QtCore import QObject, Signal
 from training import Trainer, SimpleDispatcher
 from train_slim import SelfLabelingTrainer
-from train_ppo_dispatcher import train_ppo
+from train_ppo_dispatcher import train_ppo   # импортированная функция остаётся train_ppo
 
-# ---------- Консольные сигналы (полноценный QObject) ----------
+
+# ---------- Консольные сигналы ----------
 class ConsoleSignals(QObject):
     progress = Signal(int, float)
     log = Signal(str)
 
     def __init__(self):
         super().__init__()
-        # Подключаем сигналы к обычным print
-        self.progress.connect(lambda e, l: None)   # не печатаем каждую эпоху
+        self.progress.connect(lambda e, l: None)
         self.log.connect(lambda msg: print(msg))
+
 
 # ---------- Обучение ----------
 def train_pointer_net():
@@ -35,6 +34,7 @@ def train_pointer_net():
         torch.save(model.state_dict(), "pointer_net.pth")
         print("Модель PointerNet сохранена в pointer_net.pth")
 
+
 def train_slim():
     print("===== Обучение SLIM =====")
     signals = ConsoleSignals()
@@ -45,7 +45,8 @@ def train_slim():
         torch.save(model.state_dict(), "slim_pointer.pth")
         print("Модель SLIM сохранена в slim_pointer.pth")
 
-def train_ppo():
+
+def run_ppo():                                     # <-- переименовано
     print("===== Обучение PPO =====")
     def log_callback(msg):
         print(msg)
@@ -55,13 +56,9 @@ def train_ppo():
         torch.save(model.state_dict(), "ppo_dispatcher.pth")
         print("Модель PPO сохранена в ppo_dispatcher.pth")
 
+
 # ---------- Точка входа ----------
 if __name__ == "__main__":
-    # Переходим в корень проекта, чтобы все пути были относительными
-    root_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-    os.chdir(root_dir)
-
-    # Создаём unlabeled.npz, если его нет
     if not os.path.exists("unlabeled.npz"):
         print("unlabeled.npz не найден, создаю заглушку из 10 примеров...")
         if os.path.exists("gpss_dataset.npz"):
@@ -72,7 +69,7 @@ if __name__ == "__main__":
             print("Ошибка: gpss_dataset.npz не найден. Сгенерируйте его с помощью gpss_simulator.py")
             sys.exit(1)
 
-    train_pointer_net()
-    train_slim()
-    train_ppo()
+    #train_pointer_net()
+    #train_slim()
+    run_ppo()          # <-- переименовано
     print("Все модели обучены.")

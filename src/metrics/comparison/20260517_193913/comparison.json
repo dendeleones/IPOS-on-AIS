@@ -1,0 +1,58 @@
+{
+  "PointerNet": {
+    "mean_tardiness_hours": 9.0,
+    "max_tardiness_hours": 31.2,
+    "percent_late": 85.0,
+    "makespan_hours": 43.2,
+    "resource_load": {
+      "R1": 0.63,
+      "R2": 0.55,
+      "R3": 0.77,
+      "R4": 1.0,
+      "R5": 0.38
+    },
+    "cv_load": 0.314
+  },
+  "SLIM": {
+    "mean_tardiness_hours": 8.1,
+    "max_tardiness_hours": 23.0,
+    "percent_late": 85.0,
+    "makespan_hours": 35.0,
+    "resource_load": {
+      "R1": 0.76,
+      "R2": 0.7,
+      "R3": 1.0,
+      "R4": 0.98,
+      "R5": 0.67
+    },
+    "cv_load": 0.171
+  },
+  "PPO": {
+    "mean_tardiness_hours": 13.3,
+    "max_tardiness_hours": 38.9,
+    "percent_late": 86.7,
+    "makespan_hours": 50.9,
+    "resource_load": {
+      "R1": 1.0,
+      "R2": 0.0,
+      "R3": 0.64,
+      "R4": 0.85,
+      "R5": 0.33
+    },
+    "cv_load": 0.64
+  },
+  "Heuristic": {
+    "mean_tardiness_hours": 9.0,
+    "max_tardiness_hours": 31.3,
+    "percent_late": 85.0,
+    "makespan_hours": 43.3,
+    "resource_load": {
+      "R1": 0.61,
+      "R2": 0.56,
+      "R3": 0.76,
+      "R4": 1.0,
+      "R5": 0.38
+    },
+    "cv_load": 0.314
+  }
+}

@@ -15,12 +15,6 @@ import matplotlib.pyplot as plt
 
 
 def generate_episode(model, resources, orders, device='cpu'):
-    """
-    Генерирует один эпизод: назначает все операции с помощью текущей политики (модели),
-    вычисляет суммарное опоздание и логи вероятностей действий.
-    Возвращает loss (для обратного распространения), среднюю награду (отрицательное опоздание),
-    и последнюю награду.
-    """
     model.eval()
     work_until = {r.id: datetime.now() for r in resources}
     log_probs = []
@@ -33,8 +27,7 @@ def generate_episode(model, resources, orders, device='cpu'):
     all_ops.sort(key=lambda x: x[0].due_date)
 
     for order, op in all_ops:
-        # Простейший вектор признаков (рандомный, т.к. PPO‑пример условный)
-        # В реальной задаче нужно формировать признаки как в plan_with_reliability
+        # Временный случайный вектор признаков (в реальной задаче нужно заменить на формирование как в планировщике)
         state = torch.randn(1, 36).to(device)   # 36 = 6 (операция) + 5*6 (ресурсы)
         logits = model(state)
         probs = torch.softmax(logits, dim=1)
@@ -48,7 +41,7 @@ def generate_episode(model, resources, orders, device='cpu'):
         end = start + dur
         work_until[chosen_res.id] = end
 
-        tardiness = max(0.0, (end - order.due_date).total_seconds() / 3600.0)  # в часах
+        tardiness = max(0.0, (end - order.due_date).total_seconds() / 3600.0)  # часы
         rewards.append(-tardiness)
 
     # Простейший policy gradient (без advantage)
@@ -59,7 +52,6 @@ def generate_episode(model, resources, orders, device='cpu'):
         returns.insert(0, G)
     returns = torch.tensor(returns, device=device)
 
-    # Loss = - log_prob * discounted_reward
     policy_loss = []
     for log_prob, R in zip(log_probs, returns):
         policy_loss.append(-log_prob * R)
@@ -72,15 +64,15 @@ def train_ppo(episodes=50, lr=0.001, n_orders=30, n_resources=5,
               progress_callback=None, log_callback=None, stop_event=None):
     """
     Обучает модель SimpleDispatcher с помощью упрощённого PPO.
-    Возвращает обученную модель.
+    Параметр episodes — количество эпизодов (ранее назывался epochs, теперь унифицировано).
     """
     device = torch.device("cpu")
-    input_dim = 36          # 6 (операция) + 5 * 6 (ресурсы)
+    input_dim = 36
     output_dim = n_resources
     model = SimpleDispatcher(input_dim, output_dim).to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
-    # Фиксируем среду для воспроизводимости результатов
+    # Фиксируем среду для воспроизводимости
     from datamodels import Resource, Order, Operation
     from database import get_operation_types
 
@@ -133,12 +125,10 @@ def train_ppo(episodes=50, lr=0.001, n_orders=30, n_resources=5,
 
 
 def save_ppo_metrics(rewards, total_episodes, model_name):
-    """Сохраняет графики и JSON с метриками обучения PPO."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     folder = f"metrics/{model_name}/{timestamp}"
     os.makedirs(folder, exist_ok=True)
 
-    # JSON-история
     history = {
         "episode": list(range(1, total_episodes + 1)),
         "avg_tardiness": [float(r) for r in rewards]
@@ -146,7 +136,6 @@ def save_ppo_metrics(rewards, total_episodes, model_name):
     with open(f"{folder}/history.json", 'w') as f:
         json.dump(history, f, indent=2)
 
-    # График средней награды (опоздания)
     plt.figure()
     plt.plot(range(1, total_episodes + 1), rewards)
     plt.xlabel('Episode')
@@ -155,7 +144,6 @@ def save_ppo_metrics(rewards, total_episodes, model_name):
     plt.savefig(f"{folder}/tardiness.png")
     plt.close()
 
-    # Скользящее среднее (если эпизодов >= 10)
     if len(rewards) >= 10:
         ma = np.convolve(rewards, np.ones(10) / 10, mode='valid')
         plt.figure()
