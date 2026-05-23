@@ -3,58 +3,73 @@
 \babel@toc {russian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {russian}{}\relax 
-\contentsline {section}{ВВЕДЕНИЕ}{11}{section*.5}%
-\contentsline {section}{\numberline {1}Анализ предметной области}{13}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Структура и Технические Характеристики БПЛА}{13}{subsection.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.1}Техническое устройство БПЛА}{13}{subsubsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.2}Компоненты и подсистемы БПЛА}{14}{subsubsection.1.1.2}%
-\contentsline {subsubsection}{\numberline {1.1.3}Разнообразие моделей БПЛА и их применение в обнаружении возгораний}{14}{subsubsection.1.1.3}%
-\contentsline {subsubsection}{\numberline {1.1.4}Работа камер и сенсоров на БПЛА для обнаружения возгораний}{16}{subsubsection.1.1.4}%
-\contentsline {subsection}{\numberline {1.2}Виды пожаров и методы обнаружения}{17}{subsection.1.2}%
-\contentsline {subsubsection}{\numberline {1.2.1}Типы возгораний и их особенности}{17}{subsubsection.1.2.1}%
-\contentsline {subsubsection}{\numberline {1.2.2}Сравнительный анализ методов обнаружения очагов возгораний}{18}{subsubsection.1.2.2}%
-\contentsline {subsubsection}{\numberline {1.2.3}Технические проблемы и сложности при обнаружении возгораний с помощью БПЛА}{19}{subsubsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.3}Применение технологий для предотвращения пожаров}{19}{subsection.1.3}%
-\contentsline {subsubsection}{\numberline {1.3.1}Использование данных об обнаруженных пожарах для оперативного реагирования и предотвращения катастроф.}{19}{subsubsection.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.3.2}Роль БПЛА в операциях по тушению пожаров и \hspace {5mm} организации спасательных мероприятий}{20}{subsubsection.1.3.2}%
-\contentsline {subsubsection}{\numberline {1.3.3}Влияние автоматизированных систем обнаружения на эффективность противопожарных операций}{21}{subsubsection.1.3.3}%
-\contentsline {subsection}{\numberline {1.4}Инновации в Технологиях Пожарного Дронирования}{21}{subsection.1.4}%
-\contentsline {subsubsection}{\numberline {1.4.1}Прогрессивные методы классификации и локализации возгораний с применением нейронных сетей}{21}{subsubsection.1.4.1}%
-\contentsline {subsubsection}{\numberline {1.4.2}Перспективы применения беспилотных массивов дронов для комплексного контроля за пожарами и оценки ущерба}{22}{subsubsection.1.4.2}%
-\contentsline {subsubsection}{\numberline {1.4.3}Непосредственное использование БПЛА для тушения пожаров}{23}{subsubsection.1.4.3}%
-\contentsline {section}{\numberline {2}Техническое задание}{25}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Основание для разработки}{25}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Цель и назначение разработки}{25}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Требования пользователя к интерфейсу приложения}{25}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Моделирование вариантов использования}{27}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Требования к оформлению документации}{29}{subsection.2.5}%
-\contentsline {section}{\numberline {3}Технический проект}{30}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Общая характеристика организации решения задачи}{30}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Обоснование выбора технологии проектирования}{30}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Описание используемых технологий и языков программирования}{30}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Сверточные нейронные сети}{30}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.3}Машинное обучение}{31}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Язык программирования Python}{31}{subsubsection.3.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.5}Библиотеки Python}{32}{subsubsection.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.6}Архитектура сверточной нейронной сети}{33}{subsubsection.3.2.6}%
-\contentsline {subsubsection}{\numberline {3.2.7}Функция активации ReLU}{34}{subsubsection.3.2.7}%
-\contentsline {subsubsection}{\numberline {3.2.8}Функция IoU Loss}{35}{subsubsection.3.2.8}%
-\contentsline {subsection}{\numberline {3.3}Диаграмма компонентов}{37}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}Взаимодействие компонентов}{38}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Диаграмма программных классов}{38}{subsubsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.4} Проектирование пользовательского интерфейса}{40}{subsection.3.4}%
-\contentsline {section}{\numberline {4}Рабочий проект}{43}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Классы, используемые при разработке приложения}{43}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}Класс main}{43}{subsubsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.2}Класс dataprocessing}{48}{subsubsection.4.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.3}Класс creatingtfrecordclassifier}{50}{subsubsection.4.1.3}%
-\contentsline {subsubsection}{\numberline {4.1.4}Класс creatingtfrecordlocalizer}{51}{subsubsection.4.1.4}%
-\contentsline {subsubsection}{\numberline {4.1.5}Класс classifier}{54}{subsubsection.4.1.5}%
-\contentsline {subsubsection}{\numberline {4.1.6}Класс training}{55}{subsubsection.4.1.6}%
-\contentsline {subsection}{\numberline {4.2}Модульное тестирование разработанного приложения}{56}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Системное тестирование разработанного приложения}{59}{subsection.4.3}%
-\contentsline {section}{ЗАКЛЮЧЕНИЕ}{77}{section*.42}%
-\contentsline {section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{77}{Item.94}%
-\contentsline {section}{ПРИЛОЖЕНИЕ А\ Представление графического материала}{86}{section*.44}%
-\contentsline {section}{ПРИЛОЖЕНИЕ Б\ Фрагменты исходного кода программы}{96}{section*.54}%
-\contentsline {section}{На отдельных листах (CD-RW в прикрепленном конверте)}{110}{lstnumber.-6.199}%
+\contentsline {section}{ВВЕДЕНИЕ}{12}{section*.5}%
+\contentsline {section}{\numberline {1}Анализ предметной области}{14}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Эволюция систем производственного планирования}{14}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}От ручных графиков к автоматизированным системам}{14}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Появление ERP-систем и их роль в планировании}{14}{subsubsection.1.1.2}%
+\contentsline {subsubsection}{\numberline {1.1.3}Специализированные APS-системы}{15}{subsubsection.1.1.3}%
+\contentsline {subsubsection}{\numberline {1.1.4}Индустрия 4.0 и искусственный интеллект в планировании}{15}{subsubsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.2}Основы производственного планирования и диспетчеризации}{16}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Задача составления расписаний}{16}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Гибкое производственное расписание (Flexible Job Shop)}{16}{subsubsection.1.2.2}%
+\contentsline {subsubsection}{\numberline {1.2.3}Ключевые показатели эффективности расписаний}{17}{subsubsection.1.2.3}%
+\contentsline {subsubsection}{\numberline {1.2.4}Неопределённость и человеческий фактор}{17}{subsubsection.1.2.4}%
+\contentsline {subsubsection}{\numberline {1.2.5}Классификация методов решения FJSS}{17}{subsubsection.1.2.5}%
+\contentsline {subsection}{\numberline {1.3}Системы управления производством: MES и ERP}{18}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}ERP-системы}{18}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}MES-системы}{18}{subsubsection.1.3.2}%
+\contentsline {subsubsection}{\numberline {1.3.3}Интеграция ERP/MES/APS}{18}{subsubsection.1.3.3}%
+\contentsline {subsubsection}{\numberline {1.3.4}Примеры программных продуктов}{19}{subsubsection.1.3.4}%
+\contentsline {subsubsection}{\numberline {1.3.5}Сравнение централизованной и децентрализованной диспетчеризации}{20}{subsubsection.1.3.5}%
+\contentsline {subsection}{\numberline {1.4}Нейросетевые методы в планировании и диспетчеризации}{21}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}Обзор подходов}{21}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Архитектуры нейронных сетей}{21}{subsubsection.1.4.2}%
+\contentsline {subsubsection}{\numberline {1.4.3}Преимущества нейросетевых диспетчеров}{22}{subsubsection.1.4.3}%
+\contentsline {subsubsection}{\numberline {1.4.4}Примеры внедрения}{22}{subsubsection.1.4.4}%
+\contentsline {subsubsection}{\numberline {1.4.5}Сравнение методов обучения}{22}{subsubsection.1.4.5}%
+\contentsline {subsection}{\numberline {1.5}Целесообразность внедрения интеллектуальной APS-системы}{23}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}Критерии эффективности}{23}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Технические и организационные аспекты внедрения}{24}{subsubsection.1.5.2}%
+\contentsline {subsubsection}{\numberline {1.5.3}Перспективы развития}{24}{subsubsection.1.5.3}%
+\contentsline {subsection}{\numberline {1.6}Анализ производственных данных и потоков работ}{25}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}Жизненный цикл производственного заказа}{25}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.2}Типовая структура производственного цеха}{25}{subsubsection.1.6.2}%
+\contentsline {subsubsection}{\numberline {1.6.3}Потоки данных между системами}{25}{subsubsection.1.6.3}%
+\contentsline {subsubsection}{\numberline {1.6.4}Роль человека в автоматизированном планировании}{26}{subsubsection.1.6.4}%
+\contentsline {section}{\numberline {2}Техническое задание}{27}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Основание для разработки}{27}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Цель и назначение разработки}{27}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Требования пользователя к интерфейсу приложения}{27}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Моделирование вариантов использования}{29}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Требования к оформлению документации}{31}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Технический проект}{32}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Общая характеристика организации решения задачи}{32}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Обоснование выбора технологии проектирования}{32}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Описание используемых технологий и языков программирования}{32}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Сверточные нейронные сети}{32}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Машинное обучение}{33}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Язык программирования Python}{33}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Библиотеки Python}{34}{subsubsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.6}Архитектура сверточной нейронной сети}{35}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.7}Функция активации ReLU}{36}{subsubsection.3.2.7}%
+\contentsline {subsubsection}{\numberline {3.2.8}Функция IoU Loss}{37}{subsubsection.3.2.8}%
+\contentsline {subsection}{\numberline {3.3}Диаграмма компонентов}{39}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Взаимодействие компонентов}{40}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Диаграмма программных классов}{40}{subsubsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.4} Проектирование пользовательского интерфейса}{42}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Рабочий проект}{45}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Классы, используемые при разработке приложения}{45}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Класс main}{45}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Класс dataprocessing}{50}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.3}Класс creatingtfrecordclassifier}{52}{subsubsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.4}Класс creatingtfrecordlocalizer}{53}{subsubsection.4.1.4}%
+\contentsline {subsubsection}{\numberline {4.1.5}Класс classifier}{56}{subsubsection.4.1.5}%
+\contentsline {subsubsection}{\numberline {4.1.6}Класс training}{57}{subsubsection.4.1.6}%
+\contentsline {subsection}{\numberline {4.2}Модульное тестирование разработанного приложения}{58}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Системное тестирование разработанного приложения}{61}{subsection.4.3}%
+\contentsline {section}{ЗАКЛЮЧЕНИЕ}{78}{section*.43}%
+\contentsline {section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{78}{Item.75}%
+\contentsline {section}{ПРИЛОЖЕНИЕ А\ Представление графического материала}{87}{section*.45}%
+\contentsline {section}{ПРИЛОЖЕНИЕ Б\ Фрагменты исходного кода программы}{97}{section*.55}%
+\contentsline {section}{На отдельных листах (CD-RW в прикрепленном конверте)}{111}{lstnumber.-6.199}%
