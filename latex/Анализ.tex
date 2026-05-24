@@ -64,7 +64,7 @@ Manufacturing Execution System (MES) действует на цеховом ур
 В таблице \ref{software_compare:table} приведён обзор существующих решений для планирования производства, не использующих нейронные сети.
 
 \renewcommand{\arraystretch}{0.8} % уменьшение расстояний до сетки таблицы
-\begin{xltabular}{\textwidth}{|X|p{1.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{4.85cm}|}
+\begin{xltabular}{\textwidth}{|p{2.5cm}|X|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{4.85cm}|}
 \caption{Сравнение промышленных APS-решений \label{software_compare:table}}\\
 \hline \centrow \setlength{\baselineskip}{0.7\baselineskip} Продукт& \centrow \setlength{\baselineskip}{0.7\baselineskip} Метод оптимизации & \centrow Интеграция & \centrow Особенности \\
 \hline \centrow 1 & \centrow 2 & \centrow 3 & \centrow 4\\ 
@@ -113,12 +113,12 @@ Siemens Opcenter APS & Генетический алгоритм + эврист�
 
 \subsubsection{Примеры внедрения}
 В научной литературе описан ряд успешных экспериментов, где нейросетевой диспетчер сокращал среднее опоздание на 15–25\% по сравнению с классическими эвристиками, сохраняя стабильность при изменении числа заказов и ресурсов. Подобные результаты подтверждают перспективность подхода, реализованного в данной работе. Например, в статье \textit{Zhang et al. (2020)} показано, что Pointer Network, обученный на решениях генетического алгоритма, достигает 98\% качества эталона при тысячекратном ускорении. В работе \textit{Kim et al. (2021)} RL-агент на основе PPO сократил makespan на 12\% по сравнению с эвристикой EDD.
-
+                     %                                                                                       ^^^^^^^^^^^^^^^ -           ТУТ НАДО ССЫЛКУ
 \subsubsection{Сравнение методов обучения}
 В таблице \ref{learning_compare:table} приведено сравнение трёх парадигм обучения, реализованных в системе.
 
 \renewcommand{\arraystretch}{0.8} % уменьшение расстояний до сетки таблицы
-\begin{xltabular}{\textwidth}{|X|p{1.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{4.85cm}|}
+\begin{xltabular}{\textwidth}{|X|p{2.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|}
 \caption{Сравнение методов обучения нейросетевых диспетчеров \label{learning_compare:table}}\\
 \hline \centrow \setlength{\baselineskip}{0.7\baselineskip} Характеристика& \centrow \setlength{\baselineskip}{0.7\baselineskip} BC (PointerNet) & \centrow SLIM (Self‑Labeling) & \centrow PPO (RL) \\
 \hline \centrow 1 & \centrow 2 & \centrow 3 & \centrow 4\\ 
@@ -150,14 +150,14 @@ Siemens Opcenter APS & Генетический алгоритм + эврист�
 В таблице \ref{before_after:table} приведены данные для цеха из 5 станков и 120 заказов, демонстрирующие эффект от внедрения.
 
 \renewcommand{\arraystretch}{0.8} % уменьшение расстояний до сетки таблицы
-\begin{xltabular}{\textwidth}{|X|p{1.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{4.85cm}|}
+\begin{xltabular}{\textwidth}{|X|p{2.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|}
 \caption{Сравнение «до» и «после» внедрения нейросетевого планировщика \label{before_after:table}}\\
 \hline \centrow \setlength{\baselineskip}{0.7\baselineskip}Показатель& \centrow \setlength{\baselineskip}{0.7\baselineskip}Эвристика & \centrow SLIM-модель \\
-\hline \centrow 1 & \centrow 2 & \centrow 3 & \centrow 4\\ 
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
 \hline
 \endfirsthead
 \continuecaption{Продолжение таблицы \ref{software_compare:table}}\\
-\hline \centrow 1 & \centrow 2 & \centrow 3 & \centrow 4\\ 
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
 \hline
 \finishhead
 Среднее опоздание, ч & 9.0 & 8.1 \\ 

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.26)  22 MAY 2026 17:02
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.26)  24 MAY 2026 03:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -767,7 +767,13 @@ Underfull \hbox (badness 1320) in paragraph at lines 15--16
 \c=\count354
 \last=\count355
 \pnul=\count356
-) [7] (./main.toc [8] [9])
+) [7] (./main.toc [8]
+Underfull \hbox (badness 10000) in paragraph at lines 42--42
+[][][]\TU/TimesNewRoman(0)/m/n/14.4 Разработка программного обеспечения информа
+ционно- 
+ []
+
+[9])
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
@@ -792,27 +798,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 1--1
 \pnul=\count359
  [12]) (./Анализ.tex [13] [14] [15] [16] [17]
 [18]
-
-LaTeX Warning: Reference `software_compare:table' on page 19 undefined on input
- line 64.
-
-
-LaTeX Warning: Reference `software_compare:table' on page 19 undefined on input
- line 81.
-
-
-Overfull \hbox (41.82944pt too wide) in paragraph at lines 81--81
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Генетический
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Siemens
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 алго-
+\TU/TimesNewRoman(0)/m/n/14.4 Opcenter
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 эври-
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Генетический алго-
  []
 
 
@@ -826,33 +823,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--81
  []
 
 
-Overfull \hbox (23.62553pt too wide) in paragraph at lines 81--81
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Эвристики
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Asprova
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 с на-
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Эвристики с на-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 стра-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 ивае-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 мыми
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 прави-
+\TU/TimesNewRoman(0)/m/n/14.4 страиваемыми
  []
 
 
@@ -861,23 +843,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--81
  []
 
 
-Overfull \hbox (27.8232pt too wide) in paragraph at lines 81--81
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Preactor
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
 []|\TU/TimesNewRoman(0)/m/n/14.4 Дискретно-
  []
 
 
-Overfull \hbox (31.09273pt too wide) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 событийное
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 моде-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 лиро-
+\TU/TimesNewRoman(0)/m/n/14.4 событийное мо-
  []
 
 
@@ -891,28 +868,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--81
  []
 
 
-Overfull \hbox (9.39429pt too wide) in paragraph at lines 81--81
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Правила
+Underfull \hbox (badness 10000) in paragraph at lines 81--81
+[]|\TU/TimesNewRoman(0)/m/n/14.4 1С:ERP +
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 при-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 ори-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 тетов,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
-\TU/TimesNewRoman(0)/m/n/14.4 MRP
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Правила приорите-
  []
 
 
@@ -925,19 +887,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--81
 \TU/TimesNewRoman(0)/m/n/14.4 экосистема
  []
 
-ignored error: Infinite glue shrinkage found in box being split [19]
+
 Underfull \hbox (badness 10000) in paragraph at lines 84--84
 []\TU/TimesNewRoman(0)/b/n/14.4 1.3.5 Сравнение централизованной и децентрализо
 ванной
  []
 
-[20] [21]
-
-LaTeX Warning: Reference `learning_compare:table' on page 22 undefined on input
- line 118.
-
-
-Overfull \hbox (29.29976pt too wide) in paragraph at lines 136--136
+[19] [20]
+Overfull \hbox (0.847pt too wide) in paragraph at lines 136--136
  \TU/TimesNewRoman(0)/m/n/14.4 (PointerNet)| 
  []
 
@@ -947,1484 +904,137 @@ Overfull \hbox (7.67195pt too wide) in paragraph at lines 136--136
  []
 
 
-LaTeX Warning: Reference `software_compare:table' on page 22 undefined on input
- line 136.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Требует размеченные
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 136--136
 []|\TU/TimesNewRoman(0)/m/n/14.4 Да (началь-
  []
 
-
-Underfull \hbox (badness 3579) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Способность к обобще-
- []
-
-
-Overfull \hbox (8.6068pt too wide) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Средняя| 
- []
-
-
-Overfull \hbox (1.14664pt too wide) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Низкое| 
- []
-
-
-Overfull \hbox (12.28413pt too wide) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Хорошее| 
- []
-
-
-Underfull \hbox (badness 1881) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Устойчивость к шуму в
- []
-
-
-Overfull \hbox (0.90758pt too wide) in paragraph at lines 136--136
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Низкая| 
- []
-
-[22]
+[21]
 Underfull \hbox (badness 10000) in paragraph at lines 139--139
 []\TU/TimesNewRoman(0)/b/n/14.4 1.5 Целесообразность внедрения интеллектуальной
 
  []
 
-
-LaTeX Warning: Reference `before_after:table' on page 23 undefined on input lin
-e 150.
-
-
-Overfull \hbox (22.09273pt too wide) in paragraph at lines 168--168
- []|\TU/TimesNewRoman(0)/m/n/14.4 Эвристика| 
- []
-
-
-LaTeX Warning: Reference `software_compare:table' on page 23 undefined on input
- line 168.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 168--168
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Максимальное опозда-
- []
-
-
-Underfull \hbox (badness 1838) in paragraph at lines 168--168
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Доля опаздывающих за-
- []
-
-[23] [24]
-
-LaTeX Warning: Reference `potoki:image' on page 25 undefined on input line 200.
-
-
+[22] [23]
 File: images/potoki.png Graphic file (type bmp)
 <images/potoki.png>
-[25]) (./ТехЗадание.tex [26] [27]
-File: images/shablon.png Graphic file (type bmp)
-<images/shablon.png>
-File: images/shablon2.png Graphic file (type bmp)
-<images/shablon2.png>
- [28]
-Underfull \hbox (badness 1748) in paragraph at lines 56--57
-[]\TU/TimesNewRoman(0)/m/n/14.4 Диаграмма вариантов использования описывает фун
-кциональность
+ [24]) (./Теория.tex [25]) (./Разработка.tex [26]
+Underfull \hbox (badness 10000) in paragraph at lines 1--1
+[]\TU/TimesNewRoman(0)/b/n/14.4 3 Разработка программного обеспечения информаци
+онно-
  []
 
-[29]
+
+Underfull \hbox (badness 1325) in paragraph at lines 8--9
+[]\TU/TimesNewRoman(0)/m/n/14.4 Программный продукт предназначен для автоматиза
+ции процессов
+ []
+
+[27] [28] [29]
+File: images/koncept_model.png Graphic file (type bmp)
+<images/koncept_model.png>
+
+Underfull \hbox (badness 1292) in paragraph at lines 59--60
+[]\TU/TimesNewRoman(0)/m/n/14.4 Обучающий модуль генерирует синтетические данны
+е (правило
+ []
+
+[30] [31]
 File: images/actorusing.png Graphic file (type bmp)
 <images/actorusing.png>
-) (./ТехПроект.tex [30] [31]
-Underfull \hbox (badness 10000) in paragraph at lines 12--12
-[]\TU/TimesNewRoman(0)/b/n/14.4 3.2.1 Описание используемых технологий и языков
-
- []
-
-[32] [33]
-Underfull \hbox (badness 2961) in paragraph at lines 37--38
-[]\TU/TimesNewRoman(0)/m/n/14.4 NumPy. Фундаментальная библиотека для научных р
-асчетов в
+ [32] [33] [34] [35]
+Underfull \hbox (badness 10000) in paragraph at lines 186--187
+[]\TU/TimesNewRoman(0)/m/n/14.4 По окончании сохраняет веса модели (pointer_net
+.pth) и
  []
 
 
-Underfull \hbox (badness 1867) in paragraph at lines 40--41
-[]\TU/TimesNewRoman(0)/m/n/14.4 Pandas. Библиотека для анализа и манипуляции да
-нными. Она
+Underfull \hbox (badness 10000) in paragraph at lines 186--187
+\TU/TimesNewRoman(0)/m/n/14.4 все метрики (кривые потерь, точности, матрицу оши
+бок) в пап-
  []
 
-[34]
-File: images/archNC.png Graphic file (type bmp)
-<images/archNC.png>
-
-Underfull \hbox (badness 1635) in paragraph at lines 61--62
-[]\TU/TimesNewRoman(0)/m/n/14.4 Функция Input определяет входной слой с размеро
-м изображения
+[36] [37]
+Underfull \hbox (badness 2735) in paragraph at lines 227--228
+\TU/TimesNewRoman(0)/m/n/14.4 «Заказы», «Планирование», «Оборудование», «Состоя
+ния», «Обучение»,
  []
 
-[35]
-LaTeX Font Info:    Calculating math sizes for size <17> on input line 96.
-
-
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <8.5> not available
-(Font)              size <8> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 96.
-
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <17> on input line 96.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <11.89995> on input line 96.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8.5> on input line 96.
-
-LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 96.
-
-LaTeX Font Info:    Calculating math sizes for size <> on input line 96.
-
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <0.7> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <0.5> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <0.7> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <0.5> not available
-(Font)              size <5> substituted on input line 96.
-
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <> on input line 96.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <0.7> on input line 96.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <0.5> on input line 96.
-
-LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <0.7> not available
-(Font)              size <5> substituted on input line 96.
-
-
-LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <0.5> not available
-(Font)              size <5> substituted on input line 96.
-
-File: images/relu.png Graphic file (type bmp)
-<images/relu.png>
-[36]
-File: images/iou.png Graphic file (type bmp)
-<images/iou.png>
- [37]
-! Undefined control sequence.
-<argument> \text 
-                 {площадь пересечения}
-l.123 ...пересечения}}{\text{площадь объединения}}
-                                                  }
-? r
-OK, entering \nonstopmode...
-! Undefined control sequence.
-<argument> \text 
-                 {площадь объединения}
-l.123 ...пересечения}}{\text{площадь объединения}}
-                                                  }
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-Missing character: There is no п ("43F) in font cmmi12!
-Missing character: There is no л ("43B) in font cmmi12!
-Missing character: There is no о ("43E) in font cmmi12!
-Missing character: There is no щ ("449) in font cmmi12!
-Missing character: There is no а ("430) in font cmmi12!
-Missing character: There is no д ("434) in font cmmi12!
-Missing character: There is no ь ("44C) in font cmmi12!
-Missing character: There is no п ("43F) in font cmmi12!
-Missing character: There is no е ("435) in font cmmi12!
-Missing character: There is no р ("440) in font cmmi12!
-Missing character: There is no е ("435) in font cmmi12!
-Missing character: There is no с ("441) in font cmmi12!
-Missing character: There is no е ("435) in font cmmi12!
-Missing character: There is no ч ("447) in font cmmi12!
-Missing character: There is no е ("435) in font cmmi12!
-Missing character: There is no н ("43D) in font cmmi12!
-Missing character: There is no и ("438) in font cmmi12!
-Missing character: There is no я ("44F) in font cmmi12!
-Missing character: There is no п ("43F) in font cmmi12!
-Missing character: There is no л ("43B) in font cmmi12!
-Missing character: There is no о ("43E) in font cmmi12!
-Missing character: There is no щ ("449) in font cmmi12!
-Missing character: There is no а ("430) in font cmmi12!
-Missing character: There is no д ("434) in font cmmi12!
-Missing character: There is no ь ("44C) in font cmmi12!
-Missing character: There is no о ("43E) in font cmmi12!
-Missing character: There is no б ("431) in font cmmi12!
-Missing character: There is no ъ ("44A) in font cmmi12!
-Missing character: There is no е ("435) in font cmmi12!
-Missing character: There is no д ("434) in font cmmi12!
-Missing character: There is no и ("438) in font cmmi12!
-Missing character: There is no н ("43D) in font cmmi12!
-Missing character: There is no е ("435) in font cmmi12!
-Missing character: There is no н ("43D) in font cmmi12!
-Missing character: There is no и ("438) in font cmmi12!
-Missing character: There is no я ("44F) in font cmmi12!
-[38] [39]
-File: images/comp.png Graphic file (type bmp)
-<images/comp.png>
- [40]
-File: images/classdiag.png Graphic file (type bmp)
-<images/classdiag.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 199--200
-[]\TU/TimesNewRoman(0)/m/n/14.4 Связь dataprocessing - creatingtfrecordclassifi
-er. Класс
- []
-
-
-Underfull \hbox (badness 3250) in paragraph at lines 199--200
-\TU/TimesNewRoman(0)/m/n/14.4 такие как загрузка изображения и нормализация коо
-рдинат изображе-
- []
-
-
-Underfull \hbox (badness 1248) in paragraph at lines 199--200
-\TU/TimesNewRoman(0)/m/n/14.4 ния. Для создания записи tfrecord необходимо созд
-ать запись со всеми
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 200--201
-[]\TU/TimesNewRoman(0)/m/n/14.4 Связь dataprocessing - creatingtfrecordlocalize
-r. Класс
- []
-
-
-Underfull \hbox (badness 3250) in paragraph at lines 200--201
-\TU/TimesNewRoman(0)/m/n/14.4 такие как загрузка изображения и нормализация коо
-рдинат изображе-
- []
-
-
-Underfull \hbox (badness 1248) in paragraph at lines 200--201
-\TU/TimesNewRoman(0)/m/n/14.4 ния. Для создания записи tfrecord необходимо созд
-ать запись со всеми
- []
-
-[41] [42]
 File: images/maketinterface.png Graphic file (type bmp)
 <images/maketinterface.png>
-) (./РабочийПроект.tex [43] [44]
-Overfull \hbox (2.88367pt too wide) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 tf.keras.Model| 
- []
-
-
-Underfull \hbox (badness 3792) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 невой папке проекта
- []
-
-
-Underfull \hbox (badness 1796) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 и создается в классе
- []
-
-
-Overfull \hbox (2.88367pt too wide) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 tf.keras.Model| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Модель классифика-
- []
-
-
-Underfull \hbox (badness 2351) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 тора, загруженная из
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 в корневой папке
- []
-
-
-Underfull \hbox (badness 2698) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Главное окно прило-
- []
-
-
-Underfull \hbox (badness 2512) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 жения. Окно настро-
- []
-
-
-Underfull \hbox (badness 2932) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Холст для отображе-
- []
-
-
-Underfull \hbox (badness 2932) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Холст для отображе-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Класс для перена-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 правления вывода
- []
-
-
-Underfull \hbox (badness 7291) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 консоли в текстовое
- []
-
-
-Underfull \hbox (badness 3229) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 функции sys.stdout =
- []
-
-
-Overfull \hbox (4.75937pt too wide) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ConsoleRedirector(text).| 
- []
-
-
-Underfull \hbox (badness 2932) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Холст для отображе-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для обна-
- []
-
-
-Underfull \hbox (badness 1881) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ружения объектов на
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 изображении с ис-
- []
-
-
-Underfull \hbox (badness 1776) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 пользованием модели
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 локализатора. Здесь
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 происходит подго-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 товка изображения,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 локализация, норма-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 лизация, разделение
- []
-
-
-Underfull \hbox (badness 1939) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 на элементы, нареза-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ние изображений и
- []
-
-
-Underfull \hbox (badness 2744) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 32, 3). Далее проис-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 счет метки класса
- []
-
-
-Underfull \hbox (badness 6445) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 и сбор координат в
- []
-
-
-Underfull \hbox (badness 2142) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 В нашем варианте 0
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для визуа-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 лизации результатов
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 детекции с помо-
- []
-
-
-Underfull \hbox (badness 1028) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 щью OpenCV. Рисует
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 текст и квадраты
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 на изображении в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 знанными объектами
- []
-
-
-Underfull \hbox (badness 1681) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ции путём объедине-
- []
-
-
-Underfull \hbox (badness 4181) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ния перекрывающих-
- []
-
-
-Underfull \hbox (badness 1571) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ляем IoU, самый на-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для об-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 наружения огня на
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 изображении и его
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 визуализации. Счи-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 тывает изображение,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 переводит его в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 matplotlib и выво-
- []
-
-
-Underfull \hbox (badness 5939) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 дит на Canvas поле
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 изображения через
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 диалоговое окно.
- []
-
-
-Underfull \hbox (badness 5119) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 Также помещает его
- []
-
-
-Underfull \hbox (badness 1303) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 в Canvas поле загру-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для за-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 пуска процесса
- []
-
-
-Underfull \hbox (badness 1281) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 обнаружения огня на
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 загруженном изоб-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ражении. Вызывает
- []
-
-
-Overfull \hbox (6.22867pt too wide) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 check_and_install_packages| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для про-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 верки и установки
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 необходимых па-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 кетов PyQt5 и sip.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 Вызывается для
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 предварительного
- []
-
-
-Underfull \hbox (badness 1092) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для запуска
- []
-
-
-Underfull \hbox (badness 3919) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 для аннотации изоб-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ражений. Labelimg
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 установлен заранее,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ка дополнительные
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 фикатора. Вызывает
- []
-
-
-Underfull \hbox (badness 5064) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 функцию из другого
- []
-
-
-Underfull \hbox (badness 5245) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для начала
- []
-
-
-Underfull \hbox (badness 2310) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 обучения модели ло-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 функцию train() и
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Открывает новое
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 окно для обучения
- []
-
-
-Underfull \hbox (badness 6188) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 для удобного обуче-
- []
-
-
-Underfull \hbox (badness 6641) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 ния, тестирования и
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 работы с файлами
- []
-
-
-Underfull \hbox (badness 2671) in paragraph at lines 43--43
-\TU/TimesNewRoman(0)/m/n/14.4 пользовательской мо-
- []
-
-ignored error: Infinite glue shrinkage found in box being split [45]
-ignored error: Infinite glue shrinkage found in box being split [46]
-ignored error: Infinite glue shrinkage found in box being split [47]
-ignored error: Infinite glue shrinkage found in box being split [48] [49]
-Overfull \hbox (17.36511pt too wide) in paragraph at lines 74--74
- []|\TU/TimesNewRoman(0)/m/n/14.4 Наименование| 
- []
-
-
-Underfull \hbox (badness 2538) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Объект дерева XML,
- []
-
-
-Underfull \hbox (badness 2828) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 содержащий структу-
- []
-
-
-Underfull \hbox (badness 1152) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 ла для информирова-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Корневой элемент
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 XML файла, предо-
- []
-
-
-Underfull \hbox (badness 4927) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 дочерним элементам.
- []
-
-
-Overfull \hbox (1.24246pt too wide) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 num_objects| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Количество объек-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 тов, размеченных в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 XML файле. Коли-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 чество размеченных
- []
-
-
-Underfull \hbox (badness 2762) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 объектов (6 - кол-во
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 служебных элемен-
- []
-
-
-Underfull \hbox (badness 3219) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 нормализованных ко-
- []
-
-
-Underfull \hbox (badness 2213) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 извлеченная из XML
- []
-
-
-Underfull \hbox (badness 3068) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Высота изображения,
- []
-
-
-Underfull \hbox (badness 2213) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 извлеченная из XML
- []
-
-
-Overfull \hbox (1.2284pt too wide) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 object_cords| 
- []
-
-
-Underfull \hbox (badness 3219) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 нормализованных ко-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Тензор изображения
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 после загрузки и
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для созда-
- []
-
-
-Underfull \hbox (badness 2065) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 ния новой фигуры в
- []
-
-
-Underfull \hbox (badness 1231) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для отобра-
- []
-
-
-Underfull \hbox (badness 6188) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для управ-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 ления отображением
- []
-
-
-Underfull \hbox (badness 1231) in paragraph at lines 74--74
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для отобра-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 жения всей фигуры
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 с подграфиками.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 Открывает окно с
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 74--74
-\TU/TimesNewRoman(0)/m/n/14.4 исходным изображе-
- []
-
-ignored error: Infinite glue shrinkage found in box being split [50] [51]
-Underfull \hbox (badness 5260) in paragraph at lines 98--98
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Путь к папке с
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 изображения-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 ми. Значением
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 является адрес
- []
-
-
-Underfull \hbox (badness 2088) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 папки с нашими
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 создания списка
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 XML файлов в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 указанной пап-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 ке. Формируем
- []
-
-
-Underfull \hbox (badness 2744) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 список всех xml
- []
-
-
-Underfull \hbox (badness 1565) in paragraph at lines 98--98
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для за-
- []
-
-
-Underfull \hbox (badness 5504) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 грузки и предо-
- []
-
-
-Underfull \hbox (badness 4429) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 здания TFRecord
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 для классифика-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 тора. Здесь мы
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Словарь для
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 сопоставления
- []
-
-
-Underfull \hbox (badness 5203) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 названий с мет-
- []
-
-
-Underfull \hbox (badness 3514) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 ками классов. В
- []
-
-
-Underfull \hbox (badness 1325) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 Ничего (nothing),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 1- Возгорание
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Внутренняя
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 функция для
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 ботанного изоб-
- []
-
-
-Underfull \hbox (badness 3657) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 в TFRecord. Со-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 здается запись
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 writer, данные
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 предоставляются
- []
-
-
-Underfull \hbox (badness 2042) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 в байтовом виде
- []
-
-
-Underfull \hbox (badness 1348) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 и собирается эк-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 земляр, который
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 потом записы-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 вается в запись
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Функция для
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 разбора записей
- []
-
-
-Underfull \hbox (badness 1057) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 TFRecord. Имена
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 элементов оста-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--98
-\TU/TimesNewRoman(0)/m/n/14.4 ются как при
- []
-
-ignored error: Infinite glue shrinkage found in box being split [52]
-Underfull \hbox (badness 5260) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Путь к папке с
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 изображения-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 ми. Значением
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 является адрес
- []
-
-
-Underfull \hbox (badness 2088) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 папки с нашими
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Загружает изоб-
- []
-
-
-Underfull \hbox (badness 1270) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 ражение, декоди-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 рует, нормали-
- []
-
-
-Underfull \hbox (badness 5681) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 зует и изменяет
- []
-
-
-Underfull \hbox (badness 7064) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Формируем спи-
- []
-
-
-Overfull \hbox (10.02763pt too wide) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 TFRecordWriter| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Записывает дан-
- []
-
-
-Underfull \hbox (badness 2005) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 ные в TFRecord.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 Создание самой
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Количество объ-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 ектов в XML
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Список коорди-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Ширина изобра-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Высота изобра-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Координаты од-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 ного объекта.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 Тут мы также
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 нормализуем
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 координаты от
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 на исходные
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Сериализованное
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 изображение.
- []
-
-
-Underfull \hbox (badness 3989) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 Готовим данные,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 представляем в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 координаты. Го-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 товим данные,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 представляем в
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Пример данных
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 для TFRecord.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 Собираем экзе-
- []
-
-
-Overfull \hbox (16.2081pt too wide) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 TFRecordDataset| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 TFRecord. Сразу
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 после создания
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 проверка чтения
- []
-
-
-Underfull \hbox (badness 1348) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Разбирает запись
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 135--135
-\TU/TimesNewRoman(0)/m/n/14.4 из TFRecord.
- []
-
-
-Underfull \hbox (badness 1189) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Описание прихо-
- []
-
-
-Underfull \hbox (badness 6016) in paragraph at lines 135--135
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Разобранный эк-
- []
-
-[53]
-ignored error: Infinite glue shrinkage found in box being split [54] [55]
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Разбирает запись
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 TFRecord, возвращая
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-[]|\TU/TimesNewRoman(0)/m/n/14.4 shuffle, cache, prefetch,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Подготавливает да-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 тасет к обучению:
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 перемешивание,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 кэширование, пред-
- []
-
-
-Underfull \hbox (badness 1748) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 варительная загрузка,
- []
-
-
-Underfull \hbox (badness 1742) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 ры из датасета и их
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Определяет модель
- []
-
-
-Underfull \hbox (badness 1642) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 ния, возвращая сред-
- []
-
-
-Underfull \hbox (badness 7631) in paragraph at lines 160--160
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Обучает классифика-
- []
-
-
-Underfull \hbox (badness 6094) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 тор и визуализирует
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Визуализирует изоб-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 ражения и пред-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 160--160
-\TU/TimesNewRoman(0)/m/n/14.4 сказания модели с
- []
-
-ignored error: Infinite glue shrinkage found in box being split [56]
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Разбирает запись
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/14.4 TFRecord, возвра-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/14.4 щая изображение и
- []
-
-
-Underfull \hbox (badness 4819) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/14.4 между истинными и
- []
-
-
-Underfull \hbox (badness 2035) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/14.4 предсказанными рам-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Определяет модель
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-[]|\TU/TimesNewRoman(0)/m/n/14.4 Тестирует модель,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/14.4 визуализируя резуль-
- []
-
-
-Underfull \hbox (badness 7012) in paragraph at lines 186--186
-\TU/TimesNewRoman(0)/m/n/14.4 зуализирует историю
- []
-
-ignored error: Infinite glue shrinkage found in box being split [57]
-(c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-LaTeX Font Info:    Font shape `TU/Verdana(0)/m/n' will be
-(Font)              scaled to size 10.07994pt on input line 195.
- [58] [59] [60]
-File: images/systemtest1.png Graphic file (type bmp)
-<images/systemtest1.png>
-
-[61]
-File: images/systemtest13.png Graphic file (type bmp)
-<images/systemtest13.png>
- [62]
-File: images/systemtest2.png Graphic file (type bmp)
-<images/systemtest2.png>
- [63]
-File: images/systemtest4.png Graphic file (type bmp)
-<images/systemtest4.png>
- [64]
-File: images/systemtest3.png Graphic file (type bmp)
-<images/systemtest3.png>
-File: images/systemtest5.png Graphic file (type bmp)
-<images/systemtest5.png>
- [65]
-File: images/systemtest6.png Graphic file (type bmp)
-<images/systemtest6.png>
-File: images/systemtest7.png Graphic file (type bmp)
-<images/systemtest7.png>
- [66]
-File: images/systemtest8.png Graphic file (type bmp)
-<images/systemtest8.png>
-File: images/systemtest9.png Graphic file (type bmp)
-<images/systemtest9.png>
- [67]
-File: images/systemtest10.png Graphic file (type bmp)
-<images/systemtest10.png>
-File: images/systemtest11.png Graphic file (type bmp)
-<images/systemtest11.png>
- [68]
-File: images/systemtest12.png Graphic file (type bmp)
-<images/systemtest12.png>
-File: images/systemtest22.png Graphic file (type bmp)
-<images/systemtest22.png>
- [69]
-File: images/systemtest14.png Graphic file (type bmp)
-<images/systemtest14.png>
- [70]
-File: images/systemtest15.png Graphic file (type bmp)
-<images/systemtest15.png>
- [71]
-File: images/systemtest16.png Graphic file (type bmp)
-<images/systemtest16.png>
- [72]
-File: images/systemtest17.png Graphic file (type bmp)
-<images/systemtest17.png>
- [73]
-File: images/systemtest18.png Graphic file (type bmp)
-<images/systemtest18.png>
-File: images/systemtest19.png Graphic file (type bmp)
-<images/systemtest19.png>
- [74]
-File: images/systemtest20.png Graphic file (type bmp)
-<images/systemtest20.png>
- [75]
-File: images/systemtest21.png Graphic file (type bmp)
-<images/systemtest21.png>
-File: images/systemtestlabelimg2.png Graphic file (type bmp)
-<images/systemtestlabelimg2.png>
-
-[76]
-File: images/systemtestlabelimg1.png Graphic file (type bmp)
-<images/systemtestlabelimg1.png>
-) (./Заключение.tex [77]) (./СписокИсточников.tex [78] [79]
+[38] [39] [40] [41]
+Underfull \hbox (badness 10000) in paragraph at lines 302--303
+[]\TU/TimesNewRoman(0)/m/n/14.4 Интеллектуальная система производственного план
+ирования
+ []
+
+
+Underfull \hbox (badness 1584) in paragraph at lines 302--303
+\TU/TimesNewRoman(0)/m/n/14.4 (APS‑система) предназначена для автоматизации про
+цессов составления
+ []
+
+[42]
+Underfull \hbox (badness 5711) in paragraph at lines 356--356
+[]|\TU/TimesNewRoman(0)/m/n/14.4 Наименование изготавливаемого изде-
+ []
+
+ignored error: Infinite glue shrinkage found in box being split [43]
+ignored error: Infinite glue shrinkage found in box being split [44]
+Overfull \hbox (5.18797pt too wide) in paragraph at lines 418--418
+[]|\TU/TimesNewRoman(0)/m/n/14.4 operation_type_id| 
+ []
+
+[45] [46]
+File: images/db.png Graphic file (type bmp)
+<images/db.png>
+ [47]
+Underfull \hbox (badness 1655) in paragraph at lines 496--497
+[]\TU/TimesNewRoman(0)/m/n/14.4 Хранение информации обеспечивается реляционной 
+базой данных
+ []
+
+[48] [49]
+File: images/components.png Graphic file (type bmp)
+<images/components.png>
+ [50] [51]
+File: images/sysarch.png Graphic file (type bmp)
+<images/sysarch.png>
+ [52]
+File: images/maket1.png Graphic file (type bmp)
+<images/maket1.png>
+ [53]
+File: images/maket2.png Graphic file (type bmp)
+<images/maket2.png>
+File: images/maket3.png Graphic file (type bmp)
+<images/maket3.png>
+ [54]
+File: images/maket4.png Graphic file (type bmp)
+<images/maket4.png>
+File: images/maket5.png Graphic file (type bmp)
+<images/maket5.png>
+ [55] [56]
+File: images/maket6.png Graphic file (type bmp)
+<images/maket6.png>
+) (./Результаты.tex [57]
+
+LaTeX Warning: Reference `avg_types:image' on page 58 undefined on input line 8
+.
+
+File: images/avg_types.png Graphic file (type bmp)
+<images/avg_types.png>
+
+Underfull \hbox (badness 1038) in paragraph at lines 16--17
+\TU/TimesNewRoman(0)/m/n/14.4 достигается при использовании модели SLIM (8.1 ча
+са), далее следуют
+ []
+
+) (./Заключение.tex [58] [59]) (./СписокИсточников.tex [60] [61]
 Underfull \hbox (badness 6188) in paragraph at lines 15--16
 []\TU/TimesNewRoman(0)/m/n/14.4 Герон, О. Практическое машинное обучение с Scik
 it-Learn и
  []
 
-[80]
+[62]
 Underfull \hbox (badness 10000) in paragraph at lines 27--28
 []\TU/TimesNewRoman(0)/m/n/14.4 Северенс, Ч. Введение в программирование на Pyt
 hon :
@@ -2484,7 +1094,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 29--30
 96 (дата обращения:
  []
 
-[81] [82]
+[63] [64]
 Underfull \hbox (badness 3557) in paragraph at lines 34--35
 []\TU/TimesNewRoman(0)/m/n/14.4 Лубенцова, Е. В. Системы управления с динамичес
 ким выбо-
@@ -2520,7 +1130,7 @@ Underfull \hbox (badness 1194) in paragraph at lines 36--37
 , 2020. - 224 с. -
  []
 
-[83]
+[65]
 Underfull \hbox (badness 1502) in paragraph at lines 40--41
 []\TU/TimesNewRoman(0)/m/n/14.4 Волков Д.А. Модель, метод и нейросетевое оптико
 -электронное
@@ -2544,7 +1154,7 @@ Underfull \hbox (badness 3826) in paragraph at lines 41--42
 022. - 144 с. -
  []
 
-[84]
+[66]
 Underfull \hbox (badness 10000) in paragraph at lines 46--47
 []\TU/TimesNewRoman(0)/m/n/14.4 Кузнецов, А. С. Теория вычислительных процессов
  : учеб-
@@ -2616,7 +1226,7 @@ Underfull \hbox (badness 1253) in paragraph at lines 48--49
 лиогр. в кн. - ISBN
  []
 
-[85]
+[67]
 Underfull \hbox (badness 1292) in paragraph at lines 52--53
 []\TU/TimesNewRoman(0)/m/n/14.4 Аверченков, В. И. Основы математического модели
 рования тех-
@@ -2658,50 +1268,51 @@ Underfull \hbox (badness 10000) in paragraph at lines 53--54
 3 (дата обращения:
  []
 
-) (./Плакаты.tex [86] [87]
+) (./Плакаты.tex [68] [69]
 File: images/Ramka_VKR.png Graphic file (type bmp)
 <images/Ramka_VKR.png>
 File: images/Ramka_VKR2.png Graphic file (type bmp)
 <images/Ramka_VKR2.png>
- [88
+ [70
 
 ]
 File: images/Ramka_VKR3.png Graphic file (type bmp)
 <images/Ramka_VKR3.png>
- [89]
+ [71]
 File: images/Ramka_VKR4.png Graphic file (type bmp)
 <images/Ramka_VKR4.png>
- [90]
+ [72]
 File: images/Ramka_VKR5.png Graphic file (type bmp)
 <images/Ramka_VKR5.png>
- [91]
+ [73]
 File: images/Ramka_VKR6.png Graphic file (type bmp)
 <images/Ramka_VKR6.png>
- [92]
+ [74]
 File: images/Ramka_VKR7.png Graphic file (type bmp)
 <images/Ramka_VKR7.png>
- [93]
+ [75]
 File: images/Ramka_VKR8.png Graphic file (type bmp)
 <images/Ramka_VKR8.png>
- [94]
+ [76]
 File: images/Ramka_VKR9.png Graphic file (type bmp)
 <images/Ramka_VKR9.png>
- [95] [96])
-(./Код.tex
+ [77] [78])
+(./Код.tex (c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+)
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 4.
- (./main.py [97
+LaTeX Font Info:    Font shape `TU/Verdana(0)/m/n' will be
+(Font)              scaled to size 10.07994pt on input line 4.
 
-] [98] [99] [100] [101] [102] [103]) (./classifier.py
-[104] [105] [106]) (./training.py [107] [108] [109]) [110]) [111] (./main.aux)
+(./main.py [79
+
+] [80] [81] [82] [83] [84] [85]) (./classifier.py [86] [87]
+[88]) (./training.py [89] [90] [91]) [92]) [93] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-LaTeX Font Warning: Size substitutions with differences
-(Font)              up to 4.5pt have occurred.
 
 
 LaTeX Warning: There were undefined references.
@@ -2715,16 +1326,16 @@ Package rerunfilecheck Warning: File `main.out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: 54D48AF9B89CF46BBA24FE01ACBF0410;20377
-(rerunfilecheck)             After:  E56D35322AF3D07AB00E671F50BAA775;22343.
+(rerunfilecheck)             Before: CA0DD2D8C3A76CDBC6329AAEB9FF0A39;22016
+(rerunfilecheck)             After:  3A12AD17DE7A09DBD0A289BEB44CB37F;23502.
  ) 
 Here is how much of TeX's memory you used:
- 17568 strings out of 468174
- 338147 string characters out of 5436827
- 1265513 words of memory out of 5000000
- 46021 multiletter control sequences out of 15000+600000
- 632037 words of font info for 91 fonts, out of 8000000 for 9000
+ 17016 strings out of 468174
+ 325206 string characters out of 5436827
+ 1246513 words of memory out of 5000000
+ 45479 multiletter control sequences out of 15000+600000
+ 629250 words of font info for 76 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 93i,11n,110p,1489b,2117s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 93i,11n,110p,1489b,2240s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (111 pages).
+Output written on main.pdf (93 pages).

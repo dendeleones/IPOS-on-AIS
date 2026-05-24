@@ -36,13 +36,12 @@
 \tableofcontents
 \input{Обозначения}
 \ifПрактика{}\else{\input{Введение}}\fi
-\input{Анализ}
-\input{ТехЗадание}
-\input{ТехПроект}
-\ifПрактика{}\else{
-   \input{РабочийПроект}
-   \input{Заключение}
-}\fi
+\input{Анализ}    %         1.
+\input{Теория}    %         2.
+\input{Разработка}  %    3.
+\input{Результаты} %    4.
+\input{Заключение}
+%}\fi
 \input{СписокИсточников}
 \ifВКР{\input{Плакаты}}\fi
 \ifПрактика{}\else{\input{Код}}\fi
