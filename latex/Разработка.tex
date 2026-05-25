@@ -631,11 +631,280 @@ key & string & Уникальное имя параметра\\
 
 \subsection{Рабочий проект}                   %           3. раб проект
 
+\subsubsection{Спецификация компонентов и классов интеллектуальной системы}
+
+В приложении~А представлены фрагменты исходного кода разработанной интеллектуальной системы производственного планирования.
+
+Класс APSCore реализует центральную бизнес-логику приложения: управление заказами и ресурсами, построение расписаний, запуск обучения и обработку очередей. В таблицах ~\ref{apscore_fields:table} и ~\ref{apscore_methods:table} приведены спецификации его основных полей и методов.
+
+\begin{xltabular}{\textwidth}{|p{4.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|X|}
+\caption{Поля класса APSCore \label{apscore_fields:table}}\\
+\hline \centrow \setlength{\baselineskip}{0.7\baselineskip} Имя & \centrow Тип & \centrow Описание \\
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{apscore_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline
+\finishhead
+resources & list[Resource] & Список производственных ресурсов\\
+\hline resource\_map & dict[str, Resource] & Словарь ресурсов по идентификатору\\
+\hline orders & list[Order] & Список активных заказов\\
+\hline current\_schedule & dict[str, dict] & Текущее оперативное расписание\\
+\hline approved\_schedule & dict[str, dict] & Утверждённое (фиксированное) расписание\\
+\hline rl\_agent & SimpleAgent или None & Загруженный нейросетевой диспетчер\\
+\hline settings & dict[str, str] & Словарь настроек приложения, загружаемый из БД\\
+\hline cached\_res\_op\_types & dict[str, list] & Кэш связей ресурс-тип для ускорения планирования\\
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{|p{7cm}|X|}
+\caption{Основные методы класса APSCore \label{apscore_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline \centrow 1 & \centrow 2\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{apscore_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline
+\finishhead
+create\_order & Создаёт новый заказ с одной операцией и сохраняет в БД\\
+\hline delete\_order & Удаляет заказ и все связанные с ним операции из БД и очередей\\
+\hline generate\_random\_orders & Генерирует заданное количество случайных заказов\\
+\hline plan\_with\_reliability & Строит расписание эвристикой EDD + эффективная загрузка\\
+\hline run\_milp & Вызывает эвристическое планирование (заменяет точный MILP)\\
+\hline \_sync\_schedule\_to\_task\_queue & Переносит назначения из расписания в очередь задач\\
+\hline start\_all\_queues & Запускает первые ожидающие задачи на всех свободных ресурсах\\
+\hline complete\_task & Завершает активную операцию, удаляет заказ и продвигает очередь\\
+\hline load\_rl\_model\_if\_available & Загружает нейросетевую модель из файла, указанного в настройках\\
+\hline plan\_with\_rl & Строит план с использованием загруженной нейросети\\
+\hline
+\end{xltabular}
+
+Класс SimpleDispatcher реализует нейросетевую модель прямого распространения, предсказывающую наиболее подходящий ресурс для операции. Его спецификация приведена в таблицах ~\ref{simpledisp_fields:table} и ~\ref{simpledisp_methods:table}.
+
+\begin{xltabular}{\textwidth}{|p{3.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{2.85cm}|X|}
+\caption{Поля класса SimpleDispatcher \label{simpledisp_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{simpledisp_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline
+\finishhead
+net & nn.Sequential & Последовательная модель\\
+\hline
+\end{xltabular}
+
+Последовательная модель нейросети в классе SimpleDispatcher содержит следующие слои: Linear(\(\rightarrow\)64)\(\rightarrow\)ReLU\(\rightarrow\)BatchNorm\(\rightarrow\)Linear(\(\rightarrow\)32)\(\rightarrow\)ReLU\(\rightarrow\)BatchNorm\(\rightarrow\)Linear(\(\rightarrow\)N).
+
+\begin{xltabular}{\textwidth}{|p{3cm}|X|}
+\caption{Методы класса SimpleDispatcher \label{simpledisp_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline \centrow 1 & \centrow 2\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{simpledisp_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline
+\finishhead
+forward & Прямой проход: принимает тензор признаков (batch \(\times\) input\_dim) и возвращает логиты для каждого ресурса\\
+\hline
+\end{xltabular}
+
+Класс Trainer обеспечивает обучение модели методом поведенческого клонирования (PointerNet). Спецификация приведена в таблицах ~\ref{trainer_fields:table} и ~\ref{trainer_methods:table}.
+
+\begin{xltabular}{\textwidth}{|p{2.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{3.8cm}|X|}
+\caption{Поля класса Trainer \label{trainer_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{trainer_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline
+\finishhead
+model & SimpleDispatcher & Обучаемая модель\\
+\hline history & dict & Словарь с историей обучения (потери, точность)\\
+\hline signals & TrainingSignals & Сигналы для отображения прогресса в GUI\\
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{|p{7cm}|X|}
+\caption{Методы класса Trainer \label{trainer_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline \centrow 1 & \centrow 2\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{trainer_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline
+\finishhead
+train\_bc & Загружает датасет, создаёт модель, запускает обучение и сохраняет метрики\\
+\hline save & Сохраняет веса модели в файл\\
+\hline load & Загружает веса модели из файла\\
+\hline save\_metrics & Сохраняет графики обучения и отчёт о классификации в папку metrics\\
+\hline
+\end{xltabular}
+
+Класс SelfLabelingTrainer (SLIM) расширяет обучение механизмом саморазметки. Его спецификация приведена в таблицах ~\ref{slimtrainer_fields:table} и ~\ref{slimtrainer_methods:table}.
+
+\begin{xltabular}{\textwidth}{|p{3.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{3.85cm}|X|}
+\caption{Поля класса SelfLabelingTrainer \label{slimtrainer_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{slimtrainer_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline
+\finishhead
+model & SimpleDispatcher & Обучаемая модель\\
+\hline history & dict & Словарь с историей обучения\\
+\hline signals & TrainingSignals & Сигналы для связи с GUI\\
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{|p{7cm}|X|}
+\caption{Методы класса SelfLabelingTrainer \label{slimtrainer_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline \centrow 1 & \centrow 2\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{slimtrainer_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline
+\finishhead
+train\_slim & Выполняет обучение с периодической саморазметкой неразмеченных данных\\
+\hline save\_metrics & Сохраняет графики и отчёт в папку metrics\\
+\hline
+\end{xltabular}
+
+Класс SimpleAgent служит обёрткой для использования обученной модели в процессе планирования. Спецификация приведена в таблицах ~\ref{simpleagent_fields:table} и ~\ref{simpleagent_methods:table}.
+
+\begin{xltabular}{\textwidth}{|p{3.5cm}|>{\setlength{\baselineskip}{0.7\baselineskip}}p{3.85cm}|X|}
+\caption{Поля класса SimpleAgent \label{simpleagent_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline \centrow 1 & \centrow 2 & \centrow 3\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{simpleagent_fields:table}}\\
+\hline \centrow Имя & \centrow Тип & \centrow Описание \\
+\hline
+\finishhead
+model & SimpleDispatcher & Загруженная обученная модель\\
+\hline device & torch.device & Устройство для вычислений (CPU)\\
+\hline
+\end{xltabular}
+
+\begin{xltabular}{\textwidth}{|p{7cm}|X|}
+\caption{Методы класса SimpleAgent \label{simpleagent_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline \centrow 1 & \centrow 2\\ 
+\hline
+\endfirsthead
+\continuecaption{Продолжение таблицы \ref{simpleagent_methods:table}}\\
+\hline \centrow Имя & \centrow Описание \\
+\hline
+\finishhead
+select\_action & Принимает вектор признаков (36) и возвращает индекс выбранного ресурса\\
+\hline
+\end{xltabular}
+
+Также в разработанной программе имеются классы Resource, Order и Operation, которые являются датаклассами и не содержат специфических методов.
+
+На рисунке ~\ref{classdiag:image} представлена диаграмма классов разработанной системы.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{classdiag}
+\caption{Диаграмма классов интеллектуальной системы }
+\label{classdiag:image}
+\end{figure}
 
 
+\subsubsection{Системное тестирование разработанного приложения}
 
+Для системного тестирования интеллектуальной системы производственного планирования были проведены проверки основных функциональных сценариев: управление заказами, построение расписаний, ручное управление очередями, завершение операций, изменение параметров ресурсов, обучение нейросетевых моделей и просмотр истории. Тестирование подтвердило, что программное обеспечение полностью соответствует заявленным функциональным требованиям.
 
+На рисунке ~\ref{systest1:image} представлен пример создания нового заказа на вкладке «Заказы». Заполнены поля: название, срок сдачи, приоритет, тип операции, длительность, изделие и количество. После нажатия кнопки «Сохранить заказ» он появляется в таблице заказов и в нераспределённых задачах на дашборде.
 
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest1}
+\caption{Пример создания нового заказа}
+\label{systest1:image}
+\end{figure}
 
+На рисунке ~\ref{systest2:image} показан дашборд после добавления нескольких заказов. В левой части отображаются нераспределённые задачи (жёлтые карточки), в правой – ресурсы с индикаторами готовности, очереди задач и текущие активные операции.
 
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest2}
+\caption{Дашборд с нераспределёнными задачами и состоянием ресурсов}
+\label{systest2:image}
+\end{figure}
+
+На рисунке ~\ref{systest3:image} представлен результат построения плана (нажатием кнопки «Построить план (RL)»). Задачи распределены по ресурсам с учётом их готовности и загрузки. Активные операции отображаются зелёными карточками, ожидающие – синими.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest3}
+\caption{Дашборд после построения плана}
+\label{systest3:image}
+\end{figure}
+
+На рисунке ~\ref{systest4:image} показана диаграмма Ганта на вкладке «Планирование». Цветные блоки соответствуют операциям разных типов, каждый блок привязан к своему ресурсу и временной шкале.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest4}
+\caption{Диаграмма Ганта построенного расписания}
+\label{systest4:image}
+\end{figure}
+
+На рисунке ~\ref{systest5:image} продемонстрирована возможность ручного управления: задача перетащена из нераспределённых в очередь другого ресурса и сразу запущена в производство. Карточка задачи изменила цвет и положение.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest5}
+\caption{Ручное перемещение задачи и запуск в производство}
+\label{systest5:image}
+\end{figure}
+
+На рисунке ~\ref{systest6:image} показан процесс завершения операции. После нажатия кнопки «Завершить» на активной задаче она исчезает из дашборда, а следующая ожидающая задача на этом ресурсе автоматически переходит в производство. Завершённый заказ появляется во вкладке «Завершённые заказы».
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest6}
+\caption{Завершение операции и автоматическое продвижение очереди}
+\label{systest6:image}
+\end{figure}
+
+На рисунке ~\ref{systest7:image} представлено окно редактирования параметров ресурса, вызываемое двойным кликом по карточке ресурса. Изменены значения готовности и ремонта. После сохранения индикаторы на дашборде обновились.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest7}
+\caption{Редактирование параметров ресурса}
+\label{systest7:image}
+\end{figure}
+
+На рисунке ~\ref{systest8:image} показана вкладка «Обучение» во время тренировки нейросетевой модели. В левой части отображается график изменения функции потерь, в правой – текстовый лог с информацией об эпохах и точности.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest8}
+\caption{Процесс обучения нейросетевой модели}
+\label{systest8:image}
+\end{figure}
+
+На рисунке ~\ref{systest9:image} представлена вкладка «Завершённые заказы» с таблицей выполненных операций. Для каждой записи указаны идентификатор операции, тип, заказ и ресурс, имеется кнопка удаления.
+
+\begin{figure}[H]
+\includegraphics[width=1\linewidth]{systest9}
+\caption{Вкладка «Завершённые заказы» с историей операций}
+\label{systest9:image}
+\end{figure}
+
+Проведённые тесты подтвердили корректную работу всех заявленных функций системы.
+
+\subsubsection{Сборка компонентов информационно-вычислительной системы}
+Сборка и запуск интеллектуальной системы производственного планирования выполняются непосредственно из исходного кода на языке Python, без предварительной компиляции. Для работы необходим интерпретатор Python версии 3.9 или выше и библиотеки, перечисленные в файле требований (PySide6, PyTorch, NumPy, Matplotlib, scikit-learn). Установка зависимостей производится однократно.
+
+Графический интерфейс приложения реализован на библиотеке PySide6, бизнес-логика системы сосредоточена в ядре, построенном по модульному принципу. Модуль управления данными обеспечивает взаимодействие с реляционной базой данных SQLite. Модели предметной области описывают производственные ресурсы, заказы и технологические операции. Обучение нейросетевых моделей реализовано отдельными компонентами, поддерживающими поведенческое клонирование, самообучение с саморазметкой и обучение с подкреплением. Генерация обучающих выборок выполняется специализированным генератором, а сравнение методов планирования — аналитическим модулем, который вычисляет ключевые производственные показатели и строит сравнительные графики. Вспомогательные компоненты отвечают за управление путями к файлам весов, предсказание длительности операций и формирование тестовых производственных данных.
+
+Все исходные модули организованы в едином каталоге проекта, что обеспечивает простоту навигации и сопровождения. Дополнительные данные, такие как обученные веса, датасеты и метрики, размещаются в автоматически создаваемых подкаталогах. Запуск приложения выполняется одной командой, после чего открывается главное окно с тематическими вкладками, и система готова к работе.
 
