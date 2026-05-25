@@ -1,199 +1,266 @@
-import tensorflow as tf
-from IPython.display import clear_output
-
-gpus = tf.config.experimental.list_physical_devices('GPU')
-for gpu in gpus:
-    tf.config.experimental.set_memory_growth(gpu, True)
-from tensorflow import keras
-from tensorflow.keras.layers import Dense, Flatten, Input, Conv2D, Conv2DTranspose, Concatenate, LeakyReLU, Dropout
-import cv2
+# training.py
 import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset, random_split
+from PySide6.QtCore import Signal, QObject
+import threading
+import random
+from datetime import datetime, timedelta
+from datamodels import Order, Operation, Resource
+from optimizer_milp import build_milp_schedule
+import os
+import json
+
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-# Структура сети по детекции
-inputs = Input((128, 128, 3))
-x = Conv2D(32, 3, activation='relu', padding='same')(inputs)
-x = Conv2D(64, 3, activation='relu', padding='same', strides=2)(x)
-x = Conv2D(64, 3, activation='relu', padding='same')(x)
-x = Conv2D(64, 3, activation='relu', padding='same', strides=2)(x)
-x = Conv2D(128, 3, activation='relu', padding='same')(x)
-x = Conv2D(128, 3, activation='relu', padding='same', strides=2)(x)
-x = Conv2D(128, 3, activation='relu', padding='same')(x)
-x = Conv2D(256, 3, activation='relu', padding='same', strides=2)(x)
-x = Conv2D(256, 3, activation='relu', padding='same')(x)
-x = Flatten()(x)
-x = Dropout(0.2)(x)
-x = Dense(256, activation='relu')(x)
-x = Dense(30)(x)  # 3*10 = 30 у нейросети это просто выходы подряд
+from sklearn.metrics import confusion_matrix, classification_report
+import seaborn as sns  # для красивой матрицы (опционально), если нет, можно без
 
-outputs = x
+class ResourceOpPointerNet(nn.Module):
+    def __init__(self, d_res, d_op, embed_dim=128, hidden_dim=256, num_heads=8):
+        super().__init__()
+        self.d_res = d_res
+        self.d_op = d_op
+        self.embed_dim = embed_dim
 
-boxregressor = keras.Model(inputs, outputs)
+        self.res_encoder = nn.Sequential(
+            nn.Linear(d_res, embed_dim),
+            nn.ReLU(),
+            nn.Linear(embed_dim, embed_dim)
+        )
+        self.op_encoder = nn.Sequential(
+            nn.Linear(d_op, embed_dim),
+            nn.ReLU(),
+            nn.Linear(embed_dim, embed_dim)
+        )
+        self.attn = nn.MultiheadAttention(embed_dim=embed_dim, num_heads=num_heads, batch_first=True)
+        self.proj = nn.Sequential(
+            nn.Linear(embed_dim * 2, hidden_dim),
+            nn.ReLU(),
+            nn.Dropout(0.1),
+            nn.Linear(hidden_dim, 1)
+        )
 
-# прочитаем запись
-dataset = tf.data.TFRecordDataset('bounding_box_dataset.tfrecord')
+# ------------------ Простая модель ------------------
+class SimpleDispatcher(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.BatchNorm1d(64),
+            nn.Linear(64, 32),
+            nn.ReLU(),
+            nn.BatchNorm1d(32),
+            nn.Linear(32, output_dim)
+        )
+    def forward(self, x):
+        return self.net(x)
 
+# ------------------ Сигналы и Тренер ------------------
+class TrainingSignals(QObject):
+    progress = Signal(int, float)
+    log = Signal(str)
 
-def parse_record(record):
-    # имена элементов как при записи
-    feature_description = {
-        'img': tf.io.FixedLenFeature([], tf.string),
-        'cords': tf.io.FixedLenFeature([], tf.string)
-    }
-    parsed_record = tf.io.parse_single_example(record, feature_description)
-    img = tf.io.parse_tensor(parsed_record['img'], out_type=tf.float32)
-    cords = tf.io.parse_tensor(parsed_record['cords'], out_type=tf.float32)
-    return img, cords
+class Trainer:
+    def __init__(self, signals=None):
+        self.signals = signals
+        self.model = None
+        self.stop_event = threading.Event()
+        self.history = {'epoch': [], 'train_loss': [], 'val_loss': [], 'val_acc': []}
+        self.y_true = None
+        self.y_pred = None
+        self.class_names = None
 
+    def save(self, path):
+        if self.model is None:
+            return False
+        try:
+            torch.save(self.model.state_dict(), path)
+            return True
+        except Exception as e:
+            if self.signals:
+                self.signals.log.emit(f"Ошибка сохранения весов: {e}")
+            return False
 
-# пройдемся по записи и распакуем ее
-dataset = dataset.map(parse_record)
+    def load(self, path):
+        if self.model is None:
+            return False
+        try:
+            self.model.load_state_dict(torch.load(path, map_location='cpu'))
+            if self.signals:
+                self.signals.log.emit(f"Веса загружены из {path}")
+            return True
+        except Exception as e:
+            if self.signals:
+                self.signals.log.emit(f"Не удалось загрузить веса: {e}")
+            return False
 
-dataset = dataset.cache().prefetch(buffer_size=tf.data.AUTOTUNE).batch(32).shuffle(40)
+    def train_bc(self, epochs=50, batch_size=32, lr=1e-3, load_path=None, force_regen_data=False):
+        self.stop_event.clear()
+        if self.signals:
+            self.signals.log.emit("Загрузка/генерация данных...")
 
+        # Используем GPSS датасет
+        if os.path.exists("gpss_dataset.npz"):
+            data = np.load("gpss_dataset.npz")
+            X = data['X']
+            y = data['y']
+            if self.signals:
+                self.signals.log.emit(f"Загружен датасет GPSS: {X.shape[0]} примеров, признаков: {X.shape[1]}, классов: {np.max(y)+1}")
+        else:
+            if self.signals:
+                self.signals.log.emit("gpss_dataset.npz не найден. Сгенерируйте его.")
+            return None
 
-# функция с вычислением IoU loss
-def IoU_Loss(true, pred):
-    # (32, 5, 4)
-    t1 = true
-    t2 = pred
+        input_dim = X.shape[1]
+        output_dim = len(np.unique(y))
+        self.class_names = [str(i) for i in range(output_dim)]  # имена классов (индексы ресурсов)
 
-    minx1, miny1, maxx1, maxy1 = tf.split(t1, 4, axis=2)
+        dataset = TensorDataset(torch.FloatTensor(X), torch.LongTensor(y))
+        train_size = int(0.8 * len(dataset))
+        val_size = len(dataset) - train_size
+        train_set, val_set = random_split(dataset, [train_size, val_size])
+        train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+        val_loader = DataLoader(val_set, batch_size=batch_size)
 
-    fminx, miny2, fmaxx = tf.split(t2, 3, axis=2)
+        self.model = SimpleDispatcher(input_dim, output_dim)
+        if load_path:
+            self.load(load_path)
 
-    minx2 = tf.minimum(fminx, fmaxx)
-    maxx2 = tf.maximum(fminx, fmaxx)
+        optimizer = optim.Adam(self.model.parameters(), lr=lr)
+        criterion = nn.CrossEntropyLoss()
 
-    delta = maxx2 - minx2
+        best_val_acc = 0.0
+        best_model_state = None
 
-    maxy2 = miny2 + delta
+        self.history = {'epoch': [], 'train_loss': [], 'val_loss': [], 'val_acc': []}
 
-    intersection = 0.0
+        for epoch in range(1, epochs + 1):
+            if self.stop_event.is_set():
+                if self.signals:
+                    self.signals.log.emit("Обучение остановлено пользователем.")
+                break
 
-    # найдем пересечение каждого из предсказанных с каждым из реальных
-    # сложим все вместе
-    for i1 in range(10):
-        for i2 in range(10):
-            x_overlap = tf.maximum(0.0, tf.minimum(maxx1[:, i1], maxx2[:, i2]) - tf.maximum(minx1[:, i1], minx2[:, i2]))
-            y_overlap = tf.maximum(0.0, tf.minimum(maxy1[:, i1], maxy2[:, i2]) - tf.maximum(miny1[:, i1], miny2[:, i2]))
-            intersection += x_overlap * y_overlap
+            self.model.train()
+            train_loss = 0
+            for bx, by in train_loader:
+                optimizer.zero_grad()
+                out = self.model(bx)
+                loss = criterion(out, by)
+                loss.backward()
+                optimizer.step()
+                train_loss += loss.item()
+            avg_train_loss = train_loss / len(train_loader)
 
-    # стремимся сделать площади всех элементов такими-же, как у реальных рамок
-    # просто среднеквадратичной ошибкой
+            self.model.eval()
+            val_loss = 0
+            correct = 0
+            total = 0
+            all_preds = []
+            all_labels = []
+            with torch.no_grad():
+                for bx, by in val_loader:
+                    out = self.model(bx)
+                    loss = criterion(out, by)
+                    val_loss += loss.item()
+                    pred = out.argmax(dim=1)
+                    correct += (pred == by).sum().item()
+                    total += by.size(0)
+                    all_preds.extend(pred.cpu().numpy())
+                    all_labels.extend(by.cpu().numpy())
+            avg_val_loss = val_loss / len(val_loader)
+            val_acc = correct / total if total > 0 else 0
 
-    beta1 = 0.0
-    for i1 in range(10):
-        for i2 in range(10):
-            x_overlap = tf.maximum(0.0, tf.minimum(maxx1[:, i1], maxx1[:, i2]) - tf.maximum(minx1[:, i1], minx1[:, i2]))
-            y_overlap = tf.maximum(0.0, tf.minimum(maxy1[:, i1], maxy1[:, i2]) - tf.maximum(miny1[:, i1], miny1[:, i2]))
-            if i1 == i2:
-                beta1 += (x_overlap * y_overlap) ** 2
-            else:
-                beta1 += x_overlap * y_overlap
+            self.history['epoch'].append(epoch)
+            self.history['train_loss'].append(avg_train_loss)
+            self.history['val_loss'].append(avg_val_loss)
+            self.history['val_acc'].append(val_acc)
 
-    beta2 = 0.0
-    for i1 in range(10):
-        for i2 in range(10):
-            x_overlap = tf.maximum(0.0, tf.minimum(maxx2[:, i1], maxx2[:, i2]) - tf.maximum(minx2[:, i1], minx2[:, i2]))
-            y_overlap = tf.maximum(0.0, tf.minimum(maxy2[:, i1], maxy2[:, i2]) - tf.maximum(miny2[:, i1], miny2[:, i2]))
-            if i1 == i2:
-                beta2 += (x_overlap * y_overlap) ** 2
-            else:
-                beta2 += x_overlap * y_overlap
+            if val_acc > best_val_acc:
+                best_val_acc = val_acc
+                best_model_state = self.model.state_dict()
+                # сохраняем предсказания лучшей эпохи для матрицы ошибок
+                self.y_true = all_labels
+                self.y_pred = all_preds
 
-    loss = (beta1 - beta2) ** 2 - intersection
+            if self.signals:
+                self.signals.progress.emit(epoch, avg_train_loss)
+                if epoch % 10 == 0 or epoch == 1:
+                    self.signals.log.emit(
+                        f"Эпоха {epoch:4d} | Потери: {avg_train_loss:.4f} | Точность: {val_acc:.4f} | Лучшая: {best_val_acc:.4f}"
+                    )
 
-    return loss
+        if best_model_state is not None:
+            self.model.load_state_dict(best_model_state)
+            if self.signals:
+                self.signals.log.emit(f"Лучшая точность валидации: {best_val_acc:.4f}")
 
+        # Сохраняем метрики
+        self.save_metrics("PointerNet")
+        return self.model
 
-# Класс модели нейросети
-class Model(tf.keras.Model):
-    def __init__(self, nn_box):
-        super(Model, self).__init__()
-        self.nn_box = nn_box
+    def save_metrics(self, model_name):
+        if not self.history:
+            return
+        import os, json
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        folder = f"metrics/{model_name}/{timestamp}"
+        os.makedirs(folder, exist_ok=True)
 
-        self.box_optimizer = tf.keras.optimizers.Adam(3e-4, clipnorm=1.0)
+        # JSON с историей
+        with open(f"{folder}/history.json", 'w') as f:
+            json.dump(self.history, f, indent=2)
 
-    @tf.function
-    def training_step(self, x, true_boxes):
-        with tf.GradientTape() as tape_box:
-            pred = self.nn_box(x, training=True)
-            pred = tf.reshape(pred, [-1, 10, 3])
+        # График потерь
+        plt.figure()
+        plt.plot(self.history['epoch'], self.history['train_loss'], label='Train Loss')
+        plt.plot(self.history['epoch'], self.history['val_loss'], label='Val Loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.title(f'{model_name} Learning Curve')
+        plt.legend()
+        plt.savefig(f"{folder}/loss.png")
+        plt.close()
 
-            loss = IoU_Loss(true_boxes, pred)
-            #      print('test', tf.reduce_mean(IoU_Loss(true_boxes, true_boxes) ))
+        # График точности
+        plt.figure()
+        plt.plot(self.history['epoch'], self.history['val_acc'], label='Val Accuracy')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.title(f'{model_name} Validation Accuracy')
+        plt.legend()
+        plt.savefig(f"{folder}/accuracy.png")
+        plt.close()
 
-        # Backpropagation.
-        grads = tape_box.gradient(loss, self.nn_box.trainable_variables)
-        self.box_optimizer.apply_gradients(zip(grads, self.nn_box.trainable_variables))
+        # Матрица ошибок и отчёт по классификации (только если есть разметка)
+        if self.y_true is not None and self.y_pred is not None and self.class_names is not None:
+            cm = confusion_matrix(self.y_true, self.y_pred)
+            plt.figure(figsize=(8, 6))
+            try:
+                import seaborn as sns
+                sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=self.class_names, yticklabels=self.class_names)
+            except ImportError:
+                plt.imshow(cm, interpolation='nearest', cmap='Blues')
+                plt.colorbar()
+            plt.title(f'{model_name} Confusion Matrix (Validation)')
+            plt.xlabel('Predicted')
+            plt.ylabel('True')
+            plt.savefig(f"{folder}/confusion_matrix.png")
+            plt.close()
 
-        return loss
+            # Classification report
+            report = classification_report(self.y_true, self.y_pred, target_names=self.class_names, output_dict=True)
+            with open(f"{folder}/classification_report.json", 'w') as f:
+                json.dump(report, f, indent=2)
 
+        if self.signals:
+            self.signals.log.emit(f"Метрики сохранены в {folder}")
 
-model = Model(boxregressor)
-
-# показывает тензор
-# for i, c in dataset.take(1):
-#    print(tf.reduce_mean(model.training_step(i, c)))
-
-
-def savemodel():
-    # сохранить
-    model.nn_box.save('my_bb_model.keras')
-
-
-def loadmodel():
-    # загрузить веса
-    model.nn_box.load_weights('my_bb_model.keras')
-
-
-def testing():
-    for ii, cc in dataset.take(1):
-        # обрабатывем целый батч, используем только пять элементов
-        pred = model.nn_box(ii)
-        plt.figure(figsize=(10, 6))
-
-        for num in range(3):
-            i = ii[num]
-
-            pred = tf.reshape(pred, [-1, 10, 3])
-            c = pred[num]
-
-            ax = plt.subplot(1, 5, num + 1)
-            # переход в numpy для работы в opencv
-            i = i.numpy()
-            c = c.numpy()
-            c = (c + 1) / 2 * 128  # обратно из от -1...1 к 0...64
-            c = c.astype(np.int16)  # для opencv
-            for bb in c:
-                bb0 = min(bb[0], bb[2])
-                bb2 = max(bb[0], bb[2])
-                i = cv2.rectangle(i, (bb0, bb[1]), (bb2, bb[1] + (bb2 - bb0)), (0, 1, 0), 1)
-            plt.imshow(i)
-
-        plt.show()
-    # print(c)
-
-
-def train():
-    hist = np.array(np.empty([0]))
-    epochs = 10                               #<<<----- Кол-во эпох
-    ff = 0
-    for epoch in range(1, epochs + 1):
-        loss = 0
-        lc = 0
-        for step, (i, c) in enumerate(dataset):
-            loss += tf.reduce_mean(model.training_step(i, c))
-            lc += 1
-        clear_output(wait=True)
-        print(epoch)
-        hist = np.append(hist, loss / lc)
-
-        plt.plot(np.arange(0, len(hist)), hist)
-        plt.show()
-        testing()
-
-
-#loadmodel()
-#train()
+    def stop(self):
+        self.stop_event.set()
