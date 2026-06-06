@@ -44,19 +44,19 @@ SLIM вновь показал лучший результат: CV = 0.171, чт
 В процессе обучения каждой модели фиксировались значения функции потерь и точности на валидационной выборке. На рисунках ~\ref{dinamPN:image}–~\ref{dinamPPO:image} представлены кривые обучения для PointerNet, SLIM и PPO соответственно.
 
 \begin{figure}[H]
-\includegraphics[width=1\linewidth]{loss_dinamPN}
+\includegraphics[height=0.8\textheight, width=\linewidth, keepaspectratio]{loss_dinamPN}
 \caption{Динамика точности при обучении PointerNet}
 \label{dinamPN:image}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[width=1\linewidth]{loss_dinamSLIM}
+\includegraphics[height=0.8\textheight, width=\linewidth, keepaspectratio]{loss_dinamSLIM}
 \caption{Динамика точности при обучении SLIM}
 \label{dinamSLIM:image}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[width=1\linewidth]{tardiness_dinamPPO}
+\includegraphics[height=0.8\textheight, width=\linewidth, keepaspectratio]{tardiness_dinamPPO}
 \caption{Динамика средней награды при обучении PPO}
 \label{dinamPPO:image}
 \end{figure}
@@ -77,7 +77,7 @@ SLIM вновь показал лучший результат: CV = 0.171, чт
 
 \subsubsection{Анализ динамики выполнения заказов}
 
-Для оценки скорости прохождения портфеля заказов через производственную систему использовалась кривая кумулятивного завершения операций (cumulative completion). На рисунке~\ref{fig:cumulative_completion} приведены графики для четырёх методов планирования. По горизонтальной оси отложено время от начала расписания в часах, по вертикальной — количество операций, перешедших в статус завершённых к данному моменту.
+Для оценки скорости прохождения портфеля заказов через производственную систему использовалась кривая кумулятивного завершения операций (cumulative completion). На рисунке ~\ref{cumulative_completion:image} приведены графики для четырёх методов планирования. По горизонтальной оси отложено время от начала расписания в часах, по вертикальной — количество операций, перешедших в статус завершённых к данному моменту.
 
 \begin{figure}[H]
 \includegraphics[width=1\linewidth]{cumulative_completion}

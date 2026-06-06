@@ -179,12 +179,13 @@
   \large\textbf{ВЫПУСКНАЯ КВАЛИФИКАЦИОННАЯ РАБОТА}\\
   \large\textbf{ПО ПРОГРАММЕ МАГИСТРАТУРЫ}\\
   \vfill
-  \normalsize\fillcenter{09.03.04 Программная инженерия}\\
+  \normalsize\fillcenter{09.04.04 Программная инженерия}\\
   \renewcommand{\baselinestretch}{1}
   \footnotesize{(код, наименование ОПОП ВО: направление подготовки, направленность (профиль))}
   \renewcommand{\baselinestretch}{\interval}
 
-  \normalsize\fillcenter{«Предпринимательство, инновации и технологии будущего в программной инженерии»}\\
+  \normalsize\fillcenter{«Предпринимательство, инновации и технологии будущего в}\\
+  \normalsize\fillcenter{программной инженерии»}\\
 }\fi
 \ifПрактика{
 	\large\textbf{ОТЧЕТ}\\
@@ -282,6 +283,10 @@
     & \footnotesize{(подпись, дата)} & \footnotesize{(инициалы, фамилия)}\\
     \restorearstrut
     Нормоконтроль & \lhrulefill{\fill} & \fillcenter\Нормоконтроль\\
+    \setarstrut{\footnotesize}
+    & \footnotesize{(подпись, дата)} & \footnotesize{(инициалы, фамилия)}\\
+    \restorearstrut
+    Рецензент & \lhrulefill{\fill}  & \fillcenter\Рецензент\\
     \setarstrut{\footnotesize}
     & \footnotesize{(подпись, дата)} & \footnotesize{(инициалы, фамилия)}\\
     \restorearstrut
