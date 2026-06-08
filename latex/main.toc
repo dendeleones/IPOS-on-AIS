@@ -31,55 +31,55 @@
 \contentsline {subsection}{\numberline {1.5}Целесообразность внедрения интеллектуальной APS-системы}{24}{subsection.1.5}%
 \contentsline {subsubsection}{\numberline {1.5.1}Критерии эффективности}{24}{subsubsection.1.5.1}%
 \contentsline {subsubsection}{\numberline {1.5.2}Технические и организационные аспекты внедрения}{25}{subsubsection.1.5.2}%
-\contentsline {subsubsection}{\numberline {1.5.3}Перспективы развития}{25}{subsubsection.1.5.3}%
+\contentsline {subsubsection}{\numberline {1.5.3}Перспективы развития}{26}{subsubsection.1.5.3}%
 \contentsline {subsection}{\numberline {1.6}Анализ производственных данных и потоков работ}{26}{subsection.1.6}%
 \contentsline {subsubsection}{\numberline {1.6.1}Жизненный цикл производственного заказа}{26}{subsubsection.1.6.1}%
 \contentsline {subsubsection}{\numberline {1.6.2}Типовая структура производственного цеха}{26}{subsubsection.1.6.2}%
-\contentsline {subsubsection}{\numberline {1.6.3}Потоки данных между системами}{26}{subsubsection.1.6.3}%
+\contentsline {subsubsection}{\numberline {1.6.3}Потоки данных между системами}{27}{subsubsection.1.6.3}%
 \contentsline {subsubsection}{\numberline {1.6.4}Роль человека в автоматизированном планировании}{27}{subsubsection.1.6.4}%
-\contentsline {section}{\numberline {2}Теоретические модели, методы и алгоритмы исследования}{28}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Модель производственной системы и параметры планирования}{28}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Эвристический алгоритм распределения операций}{29}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Генерация синтетических данных для обучения}{31}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Нейросетевые модели диспетчеризации}{32}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Многослойный перцептрон SimpleDispatcher}{32}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Pointer Network для переменного числа ресурсов}{33}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Методы обучения нейросетевых диспетчеров}{35}{subsubsection.2.4.3}%
-\contentsline {section}{\numberline {3}Разработка программного обеспечения интеллектуальной системы}{37}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Техническое задание}{37}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Основание для разработки}{37}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Назначение разработки}{37}{subsubsection.3.1.2}%
-\contentsline {subsubsection}{\numberline {3.1.3}Требования к программе}{38}{subsubsection.3.1.3}%
-\contentsline {paragraph}{\numberline {3.1.3.1}Требования к данным программы}{38}{paragraph.3.1.3.1}%
-\contentsline {paragraph}{\numberline {3.1.3.2}Концептуальная модель предметной области}{39}{paragraph.3.1.3.2}%
-\contentsline {paragraph}{\numberline {3.1.3.3}Функциональные требования к программной системе}{41}{paragraph.3.1.3.3}%
-\contentsline {paragraph}{\numberline {3.1.3.4}Требования пользователя к интерфейсу программной системы}{47}{paragraph.3.1.3.4}%
-\contentsline {paragraph}{\numberline {3.1.3.5}Нефункциональные требования к программной системе}{49}{paragraph.3.1.3.5}%
-\contentsline {paragraph}{\numberline {3.1.3.6}Требования к аппаратным средствам}{50}{paragraph.3.1.3.6}%
-\contentsline {paragraph}{\numberline {3.1.3.7}Требования к программным средствам}{50}{paragraph.3.1.3.7}%
-\contentsline {paragraph}{\numberline {3.1.3.8}Требования к архитектуре нейронной сети}{51}{paragraph.3.1.3.8}%
-\contentsline {subsubsection}{\numberline {3.1.4}Требования к оформлению документации}{52}{subsubsection.3.1.4}%
-\contentsline {subsection}{\numberline {3.2}Технический проект}{52}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Общие сведения об интеллектуальной системе оптимизации}{52}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Проект данных интеллектуальной системы}{53}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.3}Проектирование архитектуры программы}{58}{subsubsection.3.2.3}%
-\contentsline {paragraph}{\numberline {3.2.3.1}Компоненты программы}{58}{paragraph.3.2.3.1}%
-\contentsline {paragraph}{\numberline {3.2.3.2}Архитектура интеллектуальной системы}{60}{paragraph.3.2.3.2}%
-\contentsline {paragraph}{\numberline {3.2.3.3}Проектирование пользовательского интерфейса}{63}{paragraph.3.2.3.3}%
-\contentsline {subsection}{\numberline {3.3}Рабочий проект}{67}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}Спецификация компонентов и классов интеллектуальной системы}{67}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Системное тестирование разработанного приложения}{72}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}Сборка компонентов интеллектуальной системы}{79}{subsubsection.3.3.3}%
-\contentsline {section}{\numberline {4}Результаты экспериментов с программной системой}{80}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Анализ модуля распределения заказов}{80}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}Сравнение среднего опоздания заказов}{80}{subsubsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.2}Анализ длительности расписания (makespan)}{81}{subsubsection.4.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.3}Равномерность загрузки ресурсов}{82}{subsubsection.4.1.3}%
-\contentsline {subsubsection}{\numberline {4.1.4}Равномерность загрузки ресурсов}{83}{subsubsection.4.1.4}%
-\contentsline {subsubsection}{\numberline {4.1.5}Анализ устойчивости к изменению готовности ресурсов}{85}{subsubsection.4.1.5}%
-\contentsline {subsubsection}{\numberline {4.1.6}Анализ динамики выполнения заказов}{86}{subsubsection.4.1.6}%
-\contentsline {section}{ЗАКЛЮЧЕНИЕ}{90}{section*.42}%
-\contentsline {section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{91}{Item.116}%
-\contentsline {section}{ПРИЛОЖЕНИЕ А\ Представление графического материала}{98}{section*.44}%
-\contentsline {section}{ПРИЛОЖЕНИЕ Б\ Фрагменты исходного кода программы}{110}{section*.56}%
-\contentsline {section}{На отдельных листах (CD-RW в прикрепленном конверте)}{145}{lstnumber.-3.648}%
+\contentsline {section}{\numberline {2}Теоретические модели, методы и алгоритмы исследования}{29}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Модель производственной системы и параметры планирования}{29}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Эвристический алгоритм распределения операций}{30}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Генерация синтетических данных для обучения}{32}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Нейросетевые модели диспетчеризации}{33}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Многослойный перцептрон SimpleDispatcher}{33}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Pointer Network для переменного числа ресурсов}{34}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Методы обучения нейросетевых диспетчеров}{36}{subsubsection.2.4.3}%
+\contentsline {section}{\numberline {3}Разработка программного обеспечения интеллектуальной системы}{38}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Техническое задание}{38}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Основание для разработки}{38}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Назначение разработки}{38}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Требования к программе}{39}{subsubsection.3.1.3}%
+\contentsline {paragraph}{\numberline {3.1.3.1}Требования к данным программы}{39}{paragraph.3.1.3.1}%
+\contentsline {paragraph}{\numberline {3.1.3.2}Концептуальная модель предметной области}{40}{paragraph.3.1.3.2}%
+\contentsline {paragraph}{\numberline {3.1.3.3}Функциональные требования к программной системе}{42}{paragraph.3.1.3.3}%
+\contentsline {paragraph}{\numberline {3.1.3.4}Требования пользователя к интерфейсу программной системы}{48}{paragraph.3.1.3.4}%
+\contentsline {paragraph}{\numberline {3.1.3.5}Нефункциональные требования к программной системе}{50}{paragraph.3.1.3.5}%
+\contentsline {paragraph}{\numberline {3.1.3.6}Требования к аппаратным средствам}{51}{paragraph.3.1.3.6}%
+\contentsline {paragraph}{\numberline {3.1.3.7}Требования к программным средствам}{51}{paragraph.3.1.3.7}%
+\contentsline {paragraph}{\numberline {3.1.3.8}Требования к архитектуре нейронной сети}{52}{paragraph.3.1.3.8}%
+\contentsline {subsubsection}{\numberline {3.1.4}Требования к оформлению документации}{53}{subsubsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.2}Технический проект}{53}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Общие сведения об интеллектуальной системе оптимизации}{53}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Проект данных интеллектуальной системы}{54}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Проектирование архитектуры программы}{59}{subsubsection.3.2.3}%
+\contentsline {paragraph}{\numberline {3.2.3.1}Компоненты программы}{59}{paragraph.3.2.3.1}%
+\contentsline {paragraph}{\numberline {3.2.3.2}Архитектура интеллектуальной системы}{61}{paragraph.3.2.3.2}%
+\contentsline {paragraph}{\numberline {3.2.3.3}Проектирование пользовательского интерфейса}{64}{paragraph.3.2.3.3}%
+\contentsline {subsection}{\numberline {3.3}Рабочий проект}{68}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Спецификация компонентов и классов интеллектуальной системы}{68}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Системное тестирование разработанного приложения}{73}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Сборка компонентов интеллектуальной системы}{80}{subsubsection.3.3.3}%
+\contentsline {section}{\numberline {4}Результаты экспериментов с программной системой}{81}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Анализ модуля распределения заказов}{81}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Сравнение среднего опоздания заказов}{81}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Анализ длительности расписания (makespan)}{82}{subsubsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.3}Равномерность загрузки ресурсов}{83}{subsubsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.4}Равномерность загрузки ресурсов}{84}{subsubsection.4.1.4}%
+\contentsline {subsubsection}{\numberline {4.1.5}Анализ устойчивости к изменению готовности ресурсов}{86}{subsubsection.4.1.5}%
+\contentsline {subsubsection}{\numberline {4.1.6}Анализ динамики выполнения заказов}{87}{subsubsection.4.1.6}%
+\contentsline {section}{ЗАКЛЮЧЕНИЕ}{91}{section*.42}%
+\contentsline {section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}{92}{Item.116}%
+\contentsline {section}{ПРИЛОЖЕНИЕ А\ Представление графического материала}{101}{section*.44}%
+\contentsline {section}{ПРИЛОЖЕНИЕ Б\ Фрагменты исходного кода программы}{113}{section*.56}%
+\contentsline {section}{На отдельных листах (CD-RW в прикрепленном конверте)}{148}{lstnumber.-3.648}%
