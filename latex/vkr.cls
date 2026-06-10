@@ -184,8 +184,8 @@
   \footnotesize{(код, наименование ОПОП ВО: направление подготовки, направленность (профиль))}
   \renewcommand{\baselinestretch}{\interval}
 
-  \normalsize\fillcenter{«Предпринимательство, инновации и технологии будущего в}\\
-  \normalsize\fillcenter{программной инженерии»}\\
+  \normalsize\fillcenter{Предпринимательство, инновации и технологии будущего в}\\
+  \normalsize\fillcenter{программной инженерии}\\
 }\fi
 \ifПрактика{
 	\large\textbf{ОТЧЕТ}\\

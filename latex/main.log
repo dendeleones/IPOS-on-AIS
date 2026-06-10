@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.26)  9 JUN 2026 00:15
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.26)  9 JUN 2026 22:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -875,19 +875,7 @@ Underfull \hbox (badness 1728) in paragraph at lines 55--56
 ать один или
  []
 
-[19]
-Underfull \hbox (badness 3623) in paragraph at lines 73--74
-\TU/TimesNewRoman(0)/m/n/14.4 Она собирает данные о состоянии оборудования, фик
-сирует фактиче-
- []
-
-
-Underfull \hbox (badness 5403) in paragraph at lines 73--74
-\TU/TimesNewRoman(0)/m/n/14.4 ское выполнение операций, управляет очередями, фо
-рмирует задания
- []
-
-[20]
+[19] [20]
 Underfull \hbox (badness 10000) in paragraph at lines 98--98
 []|\TU/TimesNewRoman(0)/m/n/14.4 Siemens
  []
@@ -1019,22 +1007,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 168--168
 [24] [25]
 File: images/potoki.png Graphic file (type bmp)
 <images/potoki.png>
- [26]) (./Теория.tex [27] [28]
+ [26]) (./Теория.tex [27]
 Underfull \hbox (badness 10000) in paragraph at lines 3--3
 []\TU/TimesNewRoman(0)/b/n/14.4 2.1 Модель производственной системы и параметры
 
  []
 
-[29]
+[28]
 File: images/heuristic.png Graphic file (type bmp)
 <images/heuristic.png>
- [30]
+ [29]
 LaTeX Font Info:    Font shape `TU/Verdana(0)/m/n' will be
 (Font)              scaled to size 10.07994pt on input line 62.
- [31]
+ [30]
 File: images/vector.png Graphic file (type bmp)
 <images/vector.png>
- [32]
+ [31]
 File: images/SimpleDispatcher.png Graphic file (type bmp)
 <images/SimpleDispatcher.png>
 
@@ -1043,22 +1031,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 109--110
 применением
  []
 
-[33]
+[32]
 File: images/ArchPointerNet.png Graphic file (type bmp)
 <images/ArchPointerNet.png>
- [34] [35]
+ [33] [34]
 Underfull \hbox (badness 1072) in paragraph at lines 151--152
 []\TU/TimesNewRoman(0)/m/n/14.4 Behavioral Cloning (BC, PointerNet). Модель обу
 чается на набо-
  []
 
-[36]) (./Разработка.tex [37]
+[35]) (./Разработка.tex [36]
 Underfull \hbox (badness 1325) in paragraph at lines 9--10
 []\TU/TimesNewRoman(0)/m/n/14.4 Программный продукт предназначен для автоматиза
 ции процессов
  []
 
-[38] [39] [40]
+[37] [38] [39]
 File: images/koncept_model.png Graphic file (type bmp)
 <images/koncept_model.png>
 
@@ -1067,10 +1055,10 @@ Underfull \hbox (badness 1292) in paragraph at lines 60--61
 е (правило
  []
 
-[41] [42]
+[40] [41]
 File: images/actorusing.png Graphic file (type bmp)
 <images/actorusing.png>
- [43] [44] [45] [46]
+ [42] [43] [44] [45]
 Underfull \hbox (badness 5578) in paragraph at lines 174--175
 []\TU/TimesNewRoman(0)/m/n/14.4 Предусловия: имеется файл обучающей выборки gps
 s_dataset.npz,
@@ -1088,7 +1076,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 188--189
 бок) в пап-
  []
 
-[47] [48]
+[46] [47]
 Underfull \hbox (badness 2735) in paragraph at lines 229--230
 \TU/TimesNewRoman(0)/m/n/14.4 «Заказы», «Планирование», «Оборудование», «Состоя
 ния», «Обучение»,
@@ -1096,7 +1084,7 @@ Underfull \hbox (badness 2735) in paragraph at lines 229--230
 
 File: images/maketinterface.png Graphic file (type bmp)
 <images/maketinterface.png>
-[49] [50] [51] [52]
+[48] [49] [50] [51]
 Underfull \hbox (badness 10000) in paragraph at lines 304--305
 []\TU/TimesNewRoman(0)/m/n/14.4 Интеллектуальная система производственного план
 ирования
@@ -1108,75 +1096,76 @@ Underfull \hbox (badness 1584) in paragraph at lines 304--305
 цессов составления
  []
 
-[53] [54]
+[52] [53]
 Underfull \hbox (badness 5711) in paragraph at lines 358--358
 []|\TU/TimesNewRoman(0)/m/n/14.4 Наименование изготавливаемого изде-
  []
 
-[55]
+[54]
 Overfull \hbox (5.18797pt too wide) in paragraph at lines 420--420
 []|\TU/TimesNewRoman(0)/m/n/14.4 operation_type_id| 
  []
 
-[56] [57]
+[55] [56]
 File: images/db.png Graphic file (type bmp)
 <images/db.png>
- [58]
+ [57]
 Underfull \hbox (badness 1655) in paragraph at lines 498--499
 []\TU/TimesNewRoman(0)/m/n/14.4 Хранение информации обеспечивается реляционной 
 базой данных
  []
 
-[59] [60]
+[58] [59]
 File: images/components.png Graphic file (type bmp)
 <images/components.png>
- [61] [62]
+ [60] [61]
 File: images/sysarch.png Graphic file (type bmp)
 <images/sysarch.png>
- [63]
+ [62]
 File: images/maket1.png Graphic file (type bmp)
 <images/maket1.png>
- [64]
 File: images/maket2.png Graphic file (type bmp)
 <images/maket2.png>
+ [63]
 File: images/maket3.png Graphic file (type bmp)
 <images/maket3.png>
- [65]
+ [64]
 File: images/maket4.png Graphic file (type bmp)
 <images/maket4.png>
+ [65]
 File: images/maket5.png Graphic file (type bmp)
 <images/maket5.png>
- [66] [67]
+ [66]
 File: images/maket6.png Graphic file (type bmp)
 <images/maket6.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 661--661
+ [67]
+Underfull \hbox (badness 10000) in paragraph at lines 660--660
 []|\TU/TimesNewRoman(0)/m/n/14.4 dict[str,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 661--661
+Underfull \hbox (badness 10000) in paragraph at lines 660--660
 []|\TU/TimesNewRoman(0)/m/n/14.4 Утверждённое (фиксированное)
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 661--661
+Underfull \hbox (badness 10000) in paragraph at lines 660--660
 []|\TU/TimesNewRoman(0)/m/n/14.4 SimpleAgent
  []
 
 [68]
-Underfull \hbox (badness 2443) in paragraph at lines 684--684
+Underfull \hbox (badness 2443) in paragraph at lines 683--683
 []|\TU/TimesNewRoman(0)/m/n/14.4 Генерирует заданное количество слу-
  []
 
 ignored error: Infinite glue shrinkage found in box being split [69]
-Underfull \hbox (badness 10000) in paragraph at lines 702--704
+Underfull \hbox (badness 10000) in paragraph at lines 701--703
 []\TU/TimesNewRoman(0)/m/n/14.4 Последовательная модель нейросети в классе Simp
 leDispatcher
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 702--704
+Underfull \hbox (badness 10000) in paragraph at lines 701--703
 \TU/TimesNewRoman(0)/m/n/14.4 содержит следующие слои: Linear($\OMS/cmsy/m/n/14
 .4 !$\TU/TimesNewRoman(0)/m/n/14.4 64)$\OMS/cmsy/m/n/14.4 !$\TU/TimesNewRoman(0
 )/m/n/14.4 ReLU$\OMS/cmsy/m/n/14.4 !$\TU/TimesNewRoman(0)/m/n/14.4 BatchNorm$\O
@@ -1184,18 +1173,18 @@ MS/cmsy/m/n/14.4 !$
  []
 
 
-Underfull \hbox (badness 1424) in paragraph at lines 717--717
+Underfull \hbox (badness 1424) in paragraph at lines 716--716
 []|\TU/TimesNewRoman(0)/m/n/14.4 Прямой проход: принимает тензор признаков (bat
 ch $\OMS/cmsy/m/n/14.4 ^^B$
  []
 
 [70]
-Underfull \hbox (badness 1337) in paragraph at lines 735--735
+Underfull \hbox (badness 1337) in paragraph at lines 734--734
 []|\TU/TimesNewRoman(0)/m/n/14.4 Словарь с историей обучения (потери,
  []
 
 [71]
-Underfull \hbox (badness 3088) in paragraph at lines 785--785
+Underfull \hbox (badness 3088) in paragraph at lines 784--784
 []|\TU/TimesNewRoman(0)/m/n/14.4 Сохраняет графики и отчёт в папку
  []
 
@@ -1227,57 +1216,57 @@ File: images/systest8.png Graphic file (type bmp)
 File: images/systest9.png Graphic file (type bmp)
 <images/systest9.png>
  [79]
-Underfull \hbox (badness 10000) in paragraph at lines 911--912
+Underfull \hbox (badness 10000) in paragraph at lines 910--911
 []\TU/TimesNewRoman(0)/m/n/14.4 Графический интерфейс приложения реализован на 
 библиотеке
  []
 
 
-Underfull \hbox (badness 1490) in paragraph at lines 911--912
+Underfull \hbox (badness 1490) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 PySide6, бизнес-логика системы сосредоточена в яд
 ре, построенном по
  []
 
 
-Underfull \hbox (badness 2556) in paragraph at lines 911--912
+Underfull \hbox (badness 2556) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 модульному принципу. Модуль управления данными об
 еспечивает вза-
  []
 
 
-Underfull \hbox (badness 1762) in paragraph at lines 911--912
+Underfull \hbox (badness 1762) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 имодействие с реляционной базой данных SQLite. Мо
 дели предметной
  []
 
 
-Underfull \hbox (badness 3895) in paragraph at lines 911--912
+Underfull \hbox (badness 3895) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 с саморазметкой и обучение с подкреплением. Генер
 ация обучающих
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 911--912
+Underfull \hbox (badness 10000) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 выборок выполняется специализированным генераторо
 м, а сравнение
  []
 
 
-Underfull \hbox (badness 2689) in paragraph at lines 911--912
+Underfull \hbox (badness 2689) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 методов планирования — аналитическим модулем, кот
 орый вычисляет
  []
 
 
-Underfull \hbox (badness 2735) in paragraph at lines 911--912
+Underfull \hbox (badness 2735) in paragraph at lines 910--911
 \TU/TimesNewRoman(0)/m/n/14.4 весов, предсказание длительности операций и форми
 рование тестовых
  []
 
-) (./Результаты.tex [80]
+[80]) (./Результаты.tex [81]
 File: images/avg_types.png Graphic file (type bmp)
 <images/avg_types.png>
- [81]
+ [82]
 Underfull \hbox (badness 1038) in paragraph at lines 16--17
 \TU/TimesNewRoman(0)/m/n/14.4 достигается при использовании модели SLIM (8.1 ча
 са), далее следуют
@@ -1291,44 +1280,44 @@ Underfull \hbox (badness 3250) in paragraph at lines 20--21
 
 File: images/makespan.png Graphic file (type bmp)
 <images/makespan.png>
-[82]
+[83]
 File: images/load_balance.png Graphic file (type bmp)
 <images/load_balance.png>
- [83]
+ [84]
 File: images/loss_dinamPN.png Graphic file (type bmp)
 <images/loss_dinamPN.png>
- [84]
+ [85]
 File: images/loss_dinamSLIM.png Graphic file (type bmp)
 <images/loss_dinamSLIM.png>
 File: images/tardiness_dinamPPO.png Graphic file (type bmp)
 <images/tardiness_dinamPPO.png>
- [85]
+ [86]
 File: images/resource_distribution1.png Graphic file (type bmp)
 <images/resource_distribution1.png>
- [86]
+ [87]
 File: images/cumulative_completion.png Graphic file (type bmp)
 <images/cumulative_completion.png>
- [87]
-Underfull \hbox (badness 1033) in paragraph at lines 100--101
+ [88]
+Underfull \hbox (badness 1033) in paragraph at lines 99--100
 \TU/TimesNewRoman(0)/m/n/14.4 сунке  []4.9[] представлена матрица ошибок (confu
 sion matrix) для модели
  []
 
 File: images/confusion_matrix.png Graphic file (type bmp)
 <images/confusion_matrix.png>
-[88] [89]) (./Заключение.tex [90] [91]) (./СписокИсточников.tex [92]
+[89] [90]) (./Заключение.tex [91] [92]) (./СписокИсточников.tex [93]
 Underfull \hbox (badness 1184) in paragraph at lines 5--6
 \TU/TimesNewRoman(0)/m/n/14.4 282-6. Текст : электронный // ЭБС ТНТ [сайт]. – U
 RL: https://www.tnt-
  []
 
-[93]
+[94]
 Underfull \hbox (badness 7631) in paragraph at lines 16--17
 []\TU/TimesNewRoman(0)/m/n/14.4 Герон О. Практическое машинное обучение с Sciki
 t-Learn и
  []
 
-[94]
+[95]
 Underfull \hbox (badness 4660) in paragraph at lines 22--23
 \TU/TimesNewRoman(0)/m/n/14.4 обеспечения стратегического инновационного развит
 ия промышленных
@@ -1370,7 +1359,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 26--27
 96 (дата обращения:
  []
 
-[95]
+[96]
 Underfull \hbox (badness 3815) in paragraph at lines 30--31
 []\TU/TimesNewRoman(0)/m/n/14.4 Келлехер, Д. Наука о данных: базовый курс : уче
 бное посо-
@@ -1412,7 +1401,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 32--33
 tody-prognozirovaniya-v-
  []
 
-[96]
+[97]
 Underfull \hbox (badness 1975) in paragraph at lines 33--34
 \TU/TimesNewRoman(0)/m/n/14.4 нологии аппаратно‐программных средств (практическ
 ие задания и спо-
@@ -1466,7 +1455,7 @@ Underfull \hbox (badness 1496) in paragraph at lines 37--38
 ютов А. Г., Ого-
  []
 
-[97]
+[98]
 Underfull \hbox (badness 1622) in paragraph at lines 39--40
 []\TU/TimesNewRoman(0)/m/n/14.4 Исакова, А. И. Основы информационных технологий
  : учебное
@@ -1521,14 +1510,27 @@ Underfull \hbox (badness 1515) in paragraph at lines 41--42
  []
 
 
-Underfull \hbox (badness 7308) in paragraph at lines 41--42
-\TU/TimesNewRoman(0)/m/n/14.4 ЭФФЕКТИВНОСТИ РАЗЛИЧНЫХ МЕТОДОВ ОБУЧЕНИЯ НЕЙРОН-
+Underfull \hbox (badness 7685) in paragraph at lines 41--42
+\TU/TimesNewRoman(0)/m/n/14.4 Федосеев Артемий Дмитриевич, Мартон Никита Андрее
+вич Сравне-
+ []
+
+
+Underfull \hbox (badness 4779) in paragraph at lines 41--42
+\TU/TimesNewRoman(0)/m/n/14.4 ние эффективности различных методов обучения нейр
+онных сетей //
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 41--42
-\TU/TimesNewRoman(0)/m/n/14.4 №1. URL: https://cyberleninka.ru/article/n/sravne
-nie-effektivnosti-razlichnyh-
+\TU/TimesNewRoman(0)/m/n/14.4 Научный результат. Информационные технологии. 202
+3. №1. URL:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
+\TU/TimesNewRoman(0)/m/n/14.4 https://cyberleninka.ru/article/n/sravnenie-effek
+tivnosti-razlichnyh-metodov-
  []
 
 
@@ -1555,33 +1557,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 44--45
 процесса. RTJ.
  []
 
-[98]
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
+[99]
+Underfull \hbox (badness 1565) in paragraph at lines 45--46
 []\TU/TimesNewRoman(0)/m/n/14.4 Виталий Романович Александров, Алексей Алексеев
-ич Щет-
+ич Щеткин,
+ []
+
+
+Underfull \hbox (badness 6141) in paragraph at lines 45--46
+\TU/TimesNewRoman(0)/m/n/14.4 Александр Сергеевич Бевз Генеративный искусственн
+ый интеллект в
+ []
+
+
+Underfull \hbox (badness 5667) in paragraph at lines 45--46
+\TU/TimesNewRoman(0)/m/n/14.4 троль. 2025. №1 (51). URL: https://cyberleninka.r
+u/article/n/generativnyy-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 45--46
-\TU/TimesNewRoman(0)/m/n/14.4 кин, Александр Сергеевич Бевз ГЕНЕРАТИВНЫЙ ИСКУСС
-ТВЕН-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
-\TU/TimesNewRoman(0)/m/n/14.4 НЫЙ ИНТЕЛЛЕКТ В ПЛАНИРОВАНИИ ПРОИЗВОДСТВА // Из-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
-\TU/TimesNewRoman(0)/m/n/14.4 мерение. Мониторинг. Управление. Контроль. 2025. 
-№1 (51). URL:
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 45--46
-\TU/TimesNewRoman(0)/m/n/14.4 https://cyberleninka.ru/article/n/generativnyy-is
-kusstvennyy-intellekt-v-
+\TU/TimesNewRoman(0)/m/n/14.4 iskusstvennyy-intellekt-v-planirovanii-proizvodst
+va (дата обращения:
  []
 
 
@@ -1639,15 +1636,57 @@ temy-planirovaniya-na-osnove-
  []
 
 
-Underfull \hbox (badness 2277) in paragraph at lines 50--51
-\TU/TimesNewRoman(0)/m/n/14.4 ПРИЯТИЕМ // Известия Самарского научного центра Р
-АН. 2021. №2.
+Underfull \hbox (badness 6725) in paragraph at lines 50--51
+[]\TU/TimesNewRoman(0)/m/n/14.4 Иващенко А. В., Никифорова Т. В. Цифровизация о
+рганиза-
  []
 
-[99]
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+\TU/TimesNewRoman(0)/m/n/14.4 ционной структуры управления производственным пре
+дприятием //
+ []
+
+
+Underfull \hbox (badness 1546) in paragraph at lines 50--51
+\TU/TimesNewRoman(0)/m/n/14.4 Известия Самарского научного центра РАН. — 2021. 
+— №2. — URL:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+\TU/TimesNewRoman(0)/m/n/14.4 https://cyberleninka.ru/article/n/tsifrovizatsiya
+-organizatsionnoy-struktury-
+ []
+
+[100]
+Underfull \hbox (badness 7203) in paragraph at lines 51--52
+[]\TU/TimesNewRoman(0)/m/n/14.4 Преображенский А. П., Линкина А. В. Решение зад
+ачи оп-
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 51--52
-\TU/TimesNewRoman(0)/m/n/14.4 optimizatsii-resursoeffektivnosti-predpriyatiya-s
--primeneniem-tehnologiy-
+\TU/TimesNewRoman(0)/m/n/14.4 тимизации ресурсоэффективности предприятия с прим
+енением тех-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+\TU/TimesNewRoman(0)/m/n/14.4 нологий бережливого производства // Вестник ВГУИТ
+. 2021. №4
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+\TU/TimesNewRoman(0)/m/n/14.4 (90). URL: https://cyberleninka.ru/article/n/resh
+enie-zadachi-optimizatsii-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+\TU/TimesNewRoman(0)/m/n/14.4 resursoeffektivnosti-predpriyatiya-s-primeneniem-
+tehnologiy-berezhlivogo-
  []
 
 
@@ -1656,65 +1695,63 @@ Underfull \hbox (badness 1168) in paragraph at lines 52--53
 16X-2025-13-2-27-35. EDN:
  []
 
-) (./Плакаты.tex [100] [101]
-File: images/Ramka_VKRM.png Graphic file (type bmp)
-<images/Ramka_VKRM.png>
-File: images/Ramka_VKRM2.png Graphic file (type bmp)
-<images/Ramka_VKRM2.png>
- [102
-
-]
-File: images/Ramka_VKRM3.png Graphic file (type bmp)
-<images/Ramka_VKRM3.png>
- [103]
-File: images/Ramka_VKRM4.png Graphic file (type bmp)
-<images/Ramka_VKRM4.png>
- [104]
-File: images/Ramka_VKRM5.png Graphic file (type bmp)
-<images/Ramka_VKRM5.png>
- [105]
-File: images/Ramka_VKRM6.png Graphic file (type bmp)
-<images/Ramka_VKRM6.png>
- [106]
-File: images/Ramka_VKRM7.png Graphic file (type bmp)
-<images/Ramka_VKRM7.png>
- [107]
-File: images/Ramka_VKRM8.png Graphic file (type bmp)
-<images/Ramka_VKRM8.png>
- [108]
-File: images/Ramka_VKRM9.png Graphic file (type bmp)
-<images/Ramka_VKRM9.png>
- [109]
-File: images/Ramka_VKRM10.png Graphic file (type bmp)
-<images/Ramka_VKRM10.png>
-
-[110]
-File: images/Ramka_VKRM11.png Graphic file (type bmp)
-<images/Ramka_VKRM11.png>
- [111] [112]) (./Код.tex
-(c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+) (./Код.tex [101] (c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 7.
- (./core.py
-[113
+(./core.py [102]
+Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
+ge=dflt;!
+[103] [104]
+Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
+ge=dflt;!
+Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
+ge=dflt;!
+[105] [106]
+Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
+ge=dflt;!
+[107] [108] [109] [110] [111] [112] [113] [114] [115] [116] [117])
+(./training.py [118] [119] [120] [121] [122]) (./database.py [123] [124]
+[125] [126] [127] [128] [129] [130] [131] [132] [133] [134] [135]))
+(./Плакаты.tex [136] [137]
+File: images/Ramka_VKRM.png Graphic file (type bmp)
+<images/Ramka_VKRM.png>
+File: images/Ramka_VKRM2.png Graphic file (type bmp)
+<images/Ramka_VKRM2.png>
+ [138
 
 ]
-Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
-ge=dflt;!
-[114] [115]
-Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
-ge=dflt;!
-Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
-ge=dflt;!
-[116] [117]
-Missing character: There is no → (U+2192) in font Verdana/OT:script=latn;langua
-ge=dflt;!
-[118] [119] [120] [121] [122] [123] [124] [125] [126] [127] [128])
-(./training.py [129] [130] [131] [132] [133]) (./database.py [134] [135]
-[136] [137] [138] [139] [140] [141] [142] [143] [144] [145] [146]) [147])
-[148] (./main.aux)
+File: images/Ramka_VKRM3.png Graphic file (type bmp)
+<images/Ramka_VKRM3.png>
+ [139]
+File: images/Ramka_VKRM4.png Graphic file (type bmp)
+<images/Ramka_VKRM4.png>
+ [140]
+File: images/Ramka_VKRM5.png Graphic file (type bmp)
+<images/Ramka_VKRM5.png>
+ [141]
+File: images/Ramka_VKRM6.png Graphic file (type bmp)
+<images/Ramka_VKRM6.png>
+ [142]
+File: images/Ramka_VKRM7.png Graphic file (type bmp)
+<images/Ramka_VKRM7.png>
+ [143]
+File: images/Ramka_VKRM8.png Graphic file (type bmp)
+<images/Ramka_VKRM8.png>
+ [144]
+File: images/Ramka_VKRM9.png Graphic file (type bmp)
+<images/Ramka_VKRM9.png>
+ [145]
+File: images/Ramka_VKRM10.png Graphic file (type bmp)
+<images/Ramka_VKRM10.png>
+
+[146]
+File: images/Ramka_VKRM11.png Graphic file (type bmp)
+<images/Ramka_VKRM11.png>
+ [147] [148]) [149
+
+] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1724,15 +1761,15 @@ L3 programming layer <2026-01-19>
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 5FF1EC686A3BBB281E4B20A807658A4D;28617.
+(rerunfilecheck)             Checksum: 2EBAF2F8249EDF3C45F155457B890DEA;28618.
  ) 
 Here is how much of TeX's memory you used:
  19044 strings out of 468174
  357631 string characters out of 5436827
- 1252638 words of memory out of 5000000
+ 1251637 words of memory out of 5000000
  47469 multiletter control sequences out of 15000+600000
  630952 words of font info for 86 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  93i,11n,110p,1489b,2251s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (148 pages).
+Output written on main.pdf (149 pages).
